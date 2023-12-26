@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 @Entity
 data class Pokemon  constructor (
     @PrimaryKey
-    val url : String,
+    val image : String,
     val name : String
 )
 

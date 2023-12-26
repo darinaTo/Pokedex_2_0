@@ -5,16 +5,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.example.pokedex_2_0.ui.theme.Pokedex_2_0Theme
 
-
-class MainActivity : ComponentActivity() {
+class PokemonNavigation : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             Pokedex_2_0Theme {
-       /*         val navController = rememberNavController()
+ /*               val navController = rememberNavController()
                 NavHost(navController = navController, startDestination = "pokemon_list") {
                     composable("pokemon_list/") {
-                        PokemonList(navController = navController)
+                        PokemonListScreen(navController = navController)
                     }
                     composable("pokemon_detail/{pokemonColor}/{pokemonName}",
                         arguments = listOf(

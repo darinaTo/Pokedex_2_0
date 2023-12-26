@@ -7,4 +7,8 @@ data class PokemonRequest(
     @Json(name = "next") val next: String,
     @Json(name = "previous") val previous: Any,
     @Json(name = "results") val results: List<Pokemon>
-)
+) {
+    fun asModel(): List<Pokemon> {
+        return results
+    }
+}
