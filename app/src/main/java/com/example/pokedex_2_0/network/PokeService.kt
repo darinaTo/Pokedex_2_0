@@ -3,7 +3,7 @@ package com.example.pokedex_2_0.network
 /*
 import com.example.pokedex_2_0.data.model.Pokemon
 */
-import com.example.pokedex_2_0.data.PokemonList
+import com.example.pokedex_2_0.data.models.PokemonRequest
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
@@ -26,12 +26,13 @@ interface PokeService {
     suspend fun getPokemonList(
         @Query("limit") limit: Int,
         @Query("offset") offset: Int
-    ): PokemonList
+    ) : PokemonRequest
 
   /*  @GET("/pokemon/{name}")
     suspend fun getPokemonInfo(
         @Path("name") name: String
     ): Pokemon*/
+
 }
 object PokeApi {
     val retrofitService : PokeService by lazy {
