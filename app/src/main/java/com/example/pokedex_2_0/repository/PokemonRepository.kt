@@ -1,12 +1,13 @@
 package com.example.pokedex_2_0.repository
 
-import com.example.pokedex_2_0.database.PokemonDatabase
+import com.example.pokedex_2_0.data.models.request.PokemonRequest
 import com.example.pokedex_2_0.network.PokeApi
+import com.example.pokedex_2_0.util.Resource
 
-class PokemonRepository(private val database: PokemonDatabase,
+class PokemonRepository(/*private val database: PokemonDatabase,*/
     private val api : PokeApi) {
 
-   /* suspend fun getPokemonList(limit : Int, offset:Int) : Resource<PokemonList> {
+    suspend fun getPokemonList(limit : Int, offset:Int) : Resource<PokemonRequest> {
         val response = try {
             api.retrofitService.getPokemonList(limit, offset)
         } catch (e : Exception) {
@@ -15,7 +16,7 @@ class PokemonRepository(private val database: PokemonDatabase,
         return Resource.Success(response)
     }
 
-    suspend fun getPokemonInfo(name: String) : Resource<Pokemon> {
+/*    suspend fun getPokemonInfo(name: String) : Pokemon {
         val response = try {
             api.retrofitService.getPokemonInfo(name)
         } catch (e : Exception) {

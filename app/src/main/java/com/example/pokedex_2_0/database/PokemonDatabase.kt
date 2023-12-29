@@ -12,6 +12,7 @@ abstract class PokemonDatabase :RoomDatabase() {
     abstract val pokemonDao : PokemonDao
 }
 
+@Volatile
 private lateinit var INSTANCE : PokemonDatabase
 
 fun getDatabase(context: Context) : PokemonDatabase {
@@ -19,7 +20,8 @@ fun getDatabase(context: Context) : PokemonDatabase {
         if (!::INSTANCE.isInitialized) {
             INSTANCE = Room.databaseBuilder(context.applicationContext,
                 PokemonDatabase::class.java,
-                "pokemon")
+                "pokemon_database")
+                .fallbackToDestructiveMigration()
                 .build()
         }
     }
