@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.palette.graphics.Palette
 import com.example.pokedex_2_0.network.PokeApi
+import com.example.pokedex_2_0.repository.PokemonRepository
 import com.example.pokedex_2_0.util.Constants.PAGE_SIZE
 import com.example.pokedex_2_0.util.PokemonApiStatus
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,9 +26,9 @@ class PokemonViewModel() : ViewModel() {
     val status: LiveData<PokemonApiStatus> = _status
 
     private val _pokemonList = MutableStateFlow<List<PokemonEntry>>(emptyList())
-    val pokemonList : StateFlow<List<PokemonEntry>> =  _pokemonList.asStateFlow()
+    val pokemonList: StateFlow<List<PokemonEntry>> = _pokemonList.asStateFlow()
 
-
+    private val pokemonRepository = PokemonRepository(PokeApi)
     fun calcColor(drawable: Drawable, onFinish: (Color) -> Unit) {
         val bitmap = (drawable as BitmapDrawable).bitmap.copy(Bitmap.Config.ARGB_8888, true)
 
@@ -46,10 +47,10 @@ class PokemonViewModel() : ViewModel() {
         viewModelScope.launch {
             _status.value = PokemonApiStatus.LOADING
             try {
-                val request = PokeApi.retrofitService
+                val request = pokemonRepository
                     .getPokemonList(PAGE_SIZE, currentPage * PAGE_SIZE)
 
-                val pokemonEntry = request.results.mapIndexed { index, pokemon ->
+                val pokemonEntry = request.data!!.results.mapIndexed { index, pokemon ->
                     val number = if (pokemon.url.endsWith("/")) {
                         pokemon.url.dropLast(1).takeLastWhile { it.isDigit() }
                     } else {
