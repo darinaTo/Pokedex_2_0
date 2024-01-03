@@ -1,5 +1,6 @@
 package com.example.pokedex_2_0.pokemonlist
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -31,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
 import com.example.pokedex_2_0.data.models.PokemonEntry
 import com.example.pokedex_2_0.data.models.PokemonViewModel
 
@@ -51,10 +54,10 @@ fun PokemonList(
     navController: NavController,
     viewModel: PokemonViewModel = viewModel()
 ) {
-   /* val pokemonList by remember { viewModel.pokemonList }
+    val pokemonList by remember { viewModel.pokemonList }
     val status = viewModel.status
 
-    PokemonGrid(entriesList = pokemonList, navController = navController)*/
+    PokemonGrid(entriesList = pokemonList, navController = navController)
 }
 
 @Composable
@@ -79,22 +82,34 @@ fun PokemonEntry(
                 )
             }) {
         Column {
-        /*    CoilImage(
-                request = ImageRequest.Builder(LocalContext.current)
-                    .data(entry.imageUrl)
-                    .target {
-                        viewModel.calcColor(it) { dominantColor ->
-                            color = dominantColor
-                        }
-                    }
-                    .build(),
+            Image(
+                painter = rememberAsyncImagePainter(
+                    model = entry.imageUrl
+                    /*  builder = {
+                          viewModel.calcColor()
+                      }*/
+                ),
                 contentDescription = entry.pokemonName,
                 modifier = Modifier
                     .size(120.dp)
                     .align(Alignment.CenterHorizontally),
-            ) {
+            )
+            /*   Coil(
+                   request = ImageRequest.Builder(LocalContext.current)
+                       .data(entry.imageUrl)
+                       .target {
+                           viewModel.calcColor(it) { dominantColor ->
+                               color = dominantColor
+                           }
+                       }
+                       .build(),
+                   contentDescription = entry.pokemonName,
+                   modifier = Modifier
+                       .size(120.dp)
+                       .align(Alignment.CenterHorizontally),
+               ) {
 
-            }*/
+               }*/
             Text(
                 text = entry.pokemonName,
                 fontSize = 20.sp,

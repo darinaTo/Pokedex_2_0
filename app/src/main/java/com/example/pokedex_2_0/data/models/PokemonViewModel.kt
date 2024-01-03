@@ -16,7 +16,7 @@ import com.example.pokedex_2_0.util.PokemonApiStatus
 import kotlinx.coroutines.launch
 import java.util.Locale
 
-class PokemonViewModel(/*private val repository: PokemonRepository*/) : ViewModel() {
+class PokemonViewModel() : ViewModel() {
     private val _status = MutableLiveData<PokemonApiStatus>()
     val status: LiveData<PokemonApiStatus> = _status
 

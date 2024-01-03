@@ -9,6 +9,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
+//https://pokeapi.co/api/v2/pokemon?limit=10&offset=0
 private val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())
     .build()
@@ -20,7 +21,7 @@ private val retrofit = Retrofit.Builder()
 
 interface PokeService {
 
-    @GET("pokemon?limit=10&offset=0")
+    @GET("pokemon")
     suspend fun getPokemonList(
         @Query("limit") limit: Int,
         @Query("offset") offset: Int
