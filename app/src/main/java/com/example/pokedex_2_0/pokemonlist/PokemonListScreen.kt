@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -110,23 +111,28 @@ fun PokemonEntry(
 fun PokemonGrid(
     entriesList: List<PokemonEntry>,
     navController: NavController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: PokemonViewModel = viewModel()
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         contentPadding = PaddingValues(horizontal = 13.dp),
         horizontalArrangement = Arrangement.spacedBy(13.dp),
         verticalArrangement = Arrangement.spacedBy(13.dp),
+        state = rememberLazyGridState(),
         modifier = modifier
     ) {
         items(entriesList) { item ->
+            if (item.number >= entriesList.size - 1) {
+                viewModel.getPokemon()
+            }
             PokemonEntry(navController = navController, entry = item)
         }
     }
 }
 
-@Preview
-@Composable
-fun PokemonListScreenPreview() {
+    @Preview
+    @Composable
+    fun PokemonListScreenPreview() {
 
-}
+    }

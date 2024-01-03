@@ -29,6 +29,10 @@ class PokemonViewModel() : ViewModel() {
     val pokemonList: StateFlow<List<PokemonEntry>> = _pokemonList.asStateFlow()
 
     private val pokemonRepository = PokemonRepository(PokeApi)
+    init {
+        getPokemon()
+    }
+
     fun calcColor(drawable: Drawable, onFinish: (Color) -> Unit) {
         val bitmap = (drawable as BitmapDrawable).bitmap.copy(Bitmap.Config.ARGB_8888, true)
 
@@ -39,11 +43,7 @@ class PokemonViewModel() : ViewModel() {
         }
     }
 
-    init {
-        getPokemon()
-    }
-
-    private fun getPokemon() {
+     fun getPokemon() {
         viewModelScope.launch {
             _status.value = PokemonApiStatus.LOADING
             try {

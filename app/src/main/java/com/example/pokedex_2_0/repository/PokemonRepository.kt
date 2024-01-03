@@ -25,7 +25,7 @@ class PokemonRepository(/*private val dao: PokemonDao,*/
         return Resource.Success(response)
     }*/
 
-   /* suspend fun refreshPokemonList(limit : Int, offset:Int)  {
+  /*  suspend fun refreshPokemonList(limit : Int, offset:Int)  {
         withContext(Dispatchers.IO) {
             val pokemonList = getPokemonList(limit, offset)
             dao.insertAll()
