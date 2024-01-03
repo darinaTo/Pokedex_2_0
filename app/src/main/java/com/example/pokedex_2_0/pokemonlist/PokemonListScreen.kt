@@ -31,9 +31,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
 import com.example.pokedex_2_0.data.models.PokemonEntry
 import com.example.pokedex_2_0.data.models.PokemonViewModel
 
@@ -54,7 +55,7 @@ fun PokemonList(
     navController: NavController,
     viewModel: PokemonViewModel = viewModel()
 ) {
-    val pokemonList by remember { viewModel.pokemonList }
+    val pokemonList by  viewModel.pokemonList.collectAsStateWithLifecycle()
     val status = viewModel.status
 
     PokemonGrid(entriesList = pokemonList, navController = navController)
@@ -83,10 +84,13 @@ fun PokemonEntry(
             }) {
         Column {
             Image(
-                painter = rememberAsyncImagePainter(
-                    model = entry.imageUrl
-                    /*  builder = {
-                          viewModel.calcColor()
+                painter = rememberImagePainter(
+                    data  = entry.imageUrl,
+                     /* builder = {
+                          viewModel.calcColor(Drawable.createFromPath(entry.imageUrl)!!) { dominantColor ->
+                              color = dominantColor
+
+                          }
                       }*/
                 ),
                 contentDescription = entry.pokemonName,
