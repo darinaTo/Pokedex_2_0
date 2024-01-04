@@ -10,9 +10,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.pokedex_2_0.pokemonlist.PokemonList
+import com.example.pokedex_2_0.pokemondetail.PokemonDetailScreen
+import com.example.pokedex_2_0.pokemonlist.PokemonListScreen
 import com.example.pokedex_2_0.ui.theme.Pokedex_2_0Theme
-
+import java.util.Locale
 
 
 class PokemonNavigation : ComponentActivity() {
@@ -21,11 +22,11 @@ class PokemonNavigation : ComponentActivity() {
         setContent {
             Pokedex_2_0Theme {
                 val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = "pokemon_list") {
-                    composable("pokemon_list") {
-                        PokemonList(navController = navController)
+                NavHost(navController = navController, startDestination = "pokemon_list_screen") {
+                    composable("pokemon_list_screen") {
+                        PokemonListScreen(navController = navController)
                     }
-                    composable("pokemon_detail/{pokemonColor}/{pokemonName}",
+                    composable("pokemon_detail_screen/{pokemonColor}/{pokemonName}",
                         arguments = listOf(
                             navArgument("pokemonColor") {
                                 type = NavType.IntType
@@ -35,13 +36,16 @@ class PokemonNavigation : ComponentActivity() {
                             }
                         )
                     ) {
-                        val pokemonColor = remember {
+                        val dominantColor = remember {
                             val color = it.arguments?.getInt("pokemonColor")
                             color?.let { Color(it) } ?: Color.White
                         }
                         val pokemonName = remember {
                             it.arguments?.getString("pokemonName")
                         }
+                        PokemonDetailScreen(dominantColor = dominantColor,
+                            pokemonName = pokemonName?.lowercase(Locale.ROOT) ?: "",
+                            navController = navController)
                     }
 
                 }

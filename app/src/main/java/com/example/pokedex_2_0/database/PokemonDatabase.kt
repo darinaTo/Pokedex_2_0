@@ -1,12 +1,6 @@
 package com.example.pokedex_2_0.database
 
-import android.content.Context
-import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
-import com.example.pokedex_2_0.data.models.Pokemon
-
-@Database(entities = [Pokemon::class],
+/*@Database(entities = [PokemonDatabase::class],
     version = 1)
 abstract class PokemonDatabase :RoomDatabase() {
     abstract val pokemonDao: PokemonDao
@@ -24,9 +18,8 @@ abstract class PokemonDatabase :RoomDatabase() {
             )
                 .build()
             INSTANCE = instance
-            // return instance
             instance
         }
     }
     }
-}
+}*/

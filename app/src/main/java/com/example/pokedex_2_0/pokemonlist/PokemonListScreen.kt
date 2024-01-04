@@ -28,7 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -36,7 +35,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.pokedex_2_0.data.models.PokemonEntry
-import com.example.pokedex_2_0.data.models.PokemonViewModel
 
 @Composable
 fun PokemonListScreen(navController: NavController) {
@@ -44,9 +42,7 @@ fun PokemonListScreen(navController: NavController) {
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-        Column {
-
-        }
+        PokemonList(navController = navController)
     }
 }
 
@@ -130,9 +126,3 @@ fun PokemonGrid(
         }
     }
 }
-
-    @Preview
-    @Composable
-    fun PokemonListScreenPreview() {
-
-    }

@@ -1,4 +1,4 @@
-package com.example.pokedex_2_0.data.models
+package com.example.pokedex_2_0.pokemonlist
 
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.palette.graphics.Palette
+import com.example.pokedex_2_0.data.models.PokemonEntry
 import com.example.pokedex_2_0.network.PokeApi
 import com.example.pokedex_2_0.repository.PokemonRepository
 import com.example.pokedex_2_0.util.Constants.PAGE_SIZE
