@@ -52,8 +52,6 @@ fun PokemonList(
     viewModel: PokemonViewModel = viewModel()
 ) {
     val pokemonList by viewModel.pokemonList.collectAsStateWithLifecycle()
-    val status = viewModel.status
-
     PokemonGrid(entriesList = pokemonList, navController = navController)
 }
 

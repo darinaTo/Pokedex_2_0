@@ -33,7 +33,10 @@ class PokemonNavigation : ComponentActivity() {
                             },
                             navArgument("pokemonName") {
                                 type = NavType.StringType
-                            }
+                            },
+                           /* navArgument("pokemonImg") {
+                                type = NavType.StringType
+                            }*/
                         )
                     ) {
                         val dominantColor = remember {
@@ -43,8 +46,12 @@ class PokemonNavigation : ComponentActivity() {
                         val pokemonName = remember {
                             it.arguments?.getString("pokemonName")
                         }
+                      /*  val pokemonImg = remember {
+                            it.arguments?.getString("pokemonImg")
+                        }*/
                         PokemonDetailScreen(dominantColor = dominantColor,
                             pokemonName = pokemonName?.lowercase(Locale.ROOT) ?: "",
+                            /*pokemonImg = pokemonImg!!,*/
                             navController = navController)
                     }
 
