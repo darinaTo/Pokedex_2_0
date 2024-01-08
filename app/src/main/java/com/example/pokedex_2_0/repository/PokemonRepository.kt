@@ -5,8 +5,9 @@ import com.example.pokedex_2_0.data.models.request.PokemonRequest
 import com.example.pokedex_2_0.network.PokeApi
 import com.example.pokedex_2_0.util.Resource
 
-class PokemonRepository(/*private val dao: PokemonDao,*/
-                        private val api : PokeApi) {
+/*@ActivityScoped*/
+class PokemonRepository /*@Inject constructor*/(/*private val dao: PokemonDao,*/
+                                                private val api : PokeApi) {
 
     suspend fun getPokemonList(limit : Int, offset:Int) : Resource<PokemonRequest> {
         val response = try {
@@ -26,7 +27,7 @@ class PokemonRepository(/*private val dao: PokemonDao,*/
         return Resource.Success(response)
     }
 
-  /*  suspend fun refreshPokemonList(limit : Int, offset:Int)  {
+   /* suspend fun savePokemonList(limit : Int, offset:Int)  {
         withContext(Dispatchers.IO) {
             val pokemonList = getPokemonList(limit, offset)
             dao.insertAll()

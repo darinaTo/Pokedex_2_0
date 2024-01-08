@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
 }
 
 android {
@@ -9,6 +10,7 @@ android {
     compileSdk 34
 
     defaultConfig {
+
         applicationId "com.example.pokedex_2_0"
         minSdk 31
         targetSdk 34
@@ -103,8 +105,11 @@ dependencies {
 
     implementation "androidx.lifecycle:lifecycle-runtime-compose:2.6.2"
 
+    //Hilt
+    implementation 'com.google.dagger:hilt-android:2.50'
+    annotationProcessor 'com.google.dagger:hilt-compiler:2.50'
 
-
-
-
+}
+kapt {
+    correctErrorTypes true
 }

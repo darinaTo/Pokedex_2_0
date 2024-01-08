@@ -20,16 +20,21 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.Locale
 
-class PokemonViewModel() : ViewModel() {
+/*
+@HiltViewModel
+*/
+class PokemonViewModel /*@Inject constructor() */:
+    ViewModel() {
     private val _status = MutableLiveData<PokemonApiStatus>()
     private var currentPage = 0
 
     val status: LiveData<PokemonApiStatus> = _status
+    private val pokemonRepository: PokemonRepository = PokemonRepository(PokeApi)
 
     private val _pokemonList = MutableStateFlow<List<PokemonEntry>>(emptyList())
     val pokemonList: StateFlow<List<PokemonEntry>> = _pokemonList.asStateFlow()
 
-    private val pokemonRepository = PokemonRepository(PokeApi)
+
     init {
         getPokemon()
     }
@@ -44,7 +49,7 @@ class PokemonViewModel() : ViewModel() {
         }
     }
 
-     fun getPokemon() {
+    fun getPokemon() {
         viewModelScope.launch {
             _status.value = PokemonApiStatus.LOADING
             try {
