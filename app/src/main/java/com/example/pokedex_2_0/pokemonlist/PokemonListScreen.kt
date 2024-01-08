@@ -30,8 +30,8 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.pokedex_2_0.data.models.PokemonEntry
@@ -49,7 +49,7 @@ fun PokemonListScreen(navController: NavController) {
 @Composable
 fun PokemonList(
     navController: NavController,
-    viewModel: PokemonViewModel = viewModel()
+    viewModel: PokemonViewModel = hiltViewModel()
 ) {
     val pokemonList by viewModel.pokemonList.collectAsStateWithLifecycle()
     PokemonGrid(entriesList = pokemonList, navController = navController)
@@ -60,7 +60,7 @@ fun PokemonEntry(
     modifier: Modifier = Modifier,
     navController: NavController,
     entry: PokemonEntry,
-    viewModel: PokemonViewModel = viewModel()
+    viewModel: PokemonViewModel = hiltViewModel()
 ) {
     val defaultColor = MaterialTheme.colorScheme.surface
     var color by remember {
@@ -106,7 +106,7 @@ fun PokemonGrid(
     entriesList: List<PokemonEntry>,
     navController: NavController,
     modifier: Modifier = Modifier,
-    viewModel: PokemonViewModel = viewModel()
+    viewModel: PokemonViewModel = hiltViewModel()
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),

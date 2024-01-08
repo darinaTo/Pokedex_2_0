@@ -10,26 +10,25 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.palette.graphics.Palette
 import com.example.pokedex_2_0.data.models.PokemonEntry
-import com.example.pokedex_2_0.network.PokeApi
 import com.example.pokedex_2_0.repository.PokemonRepository
 import com.example.pokedex_2_0.util.Constants.PAGE_SIZE
 import com.example.pokedex_2_0.util.PokemonApiStatus
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.Locale
+import javax.inject.Inject
 
-/*
 @HiltViewModel
-*/
-class PokemonViewModel /*@Inject constructor() */:
+class PokemonViewModel @Inject constructor(private val pokemonRepository: PokemonRepository) :
     ViewModel() {
+
     private val _status = MutableLiveData<PokemonApiStatus>()
     private var currentPage = 0
 
     val status: LiveData<PokemonApiStatus> = _status
-    private val pokemonRepository: PokemonRepository = PokemonRepository(PokeApi)
 
     private val _pokemonList = MutableStateFlow<List<PokemonEntry>>(emptyList())
     val pokemonList: StateFlow<List<PokemonEntry>> = _pokemonList.asStateFlow()

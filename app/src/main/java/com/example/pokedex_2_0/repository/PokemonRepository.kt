@@ -4,14 +4,16 @@ import com.example.pokedex_2_0.data.models.request.Pokemon
 import com.example.pokedex_2_0.data.models.request.PokemonRequest
 import com.example.pokedex_2_0.network.PokeApi
 import com.example.pokedex_2_0.util.Resource
+import dagger.hilt.android.scopes.ActivityScoped
+import javax.inject.Inject
 
-/*@ActivityScoped*/
-class PokemonRepository /*@Inject constructor*/(/*private val dao: PokemonDao,*/
+@ActivityScoped
+class PokemonRepository @Inject constructor (/*private val dao: PokemonDao,*/
                                                 private val api : PokeApi) {
 
     suspend fun getPokemonList(limit : Int, offset:Int) : Resource<PokemonRequest> {
         val response = try {
-            api.retrofitService.getPokemonList(limit, offset)
+            api.getPokemonList(limit, offset)
         } catch (e : Exception) {
             return Resource.Error("An unknown error occurred.")
         }
@@ -20,7 +22,7 @@ class PokemonRepository /*@Inject constructor*/(/*private val dao: PokemonDao,*/
 
     suspend fun getPokemonInfo(name: String) : Resource<Pokemon> {
         val response = try {
-            api.retrofitService.getPokemonInfo(name)
+            api.getPokemonInfo(name)
         } catch (e : Exception) {
             return Resource.Error("An unknown error occurred.")
         }

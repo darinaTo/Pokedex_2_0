@@ -20,7 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.pokedex_2_0.data.models.request.Pokemon
 import com.example.pokedex_2_0.data.models.request.pokemondetail.Type
@@ -34,7 +34,7 @@ fun PokemonDetailScreen(
         pokemonImg : String,
     */
     navController: NavController,
-    viewModel: PokemonDetailViewModel = viewModel()
+    viewModel: PokemonDetailViewModel = hiltViewModel()
 ) {
     val pokemonInfo = produceState<Resource<Pokemon>>(initialValue = Resource.Loading()) {
         value = viewModel.getPokemonInfo(pokemonName)
