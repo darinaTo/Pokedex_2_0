@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
                     composable("pokemon_list_screen") {
                         PokemonListScreen(navController = navController)
                     }
-                    composable("pokemon_detail_screen/{pokemonColor}/{pokemonName}",
+                    composable("pokemon_detail_screen/{pokemonColor}/{pokemonName}/{pokemonImg}",
                         arguments = listOf(
                             navArgument("pokemonColor") {
                                 type = NavType.IntType
@@ -35,9 +35,9 @@ class MainActivity : ComponentActivity() {
                             navArgument("pokemonName") {
                                 type = NavType.StringType
                             },
-                           /* navArgument("pokemonImg") {
+                            navArgument("pokemonImg") {
                                 type = NavType.StringType
-                            }*/
+                            }
                         )
                     ) {
                         val dominantColor = remember {
@@ -47,12 +47,13 @@ class MainActivity : ComponentActivity() {
                         val pokemonName = remember {
                             it.arguments?.getString("pokemonName")
                         }
-                      /*  val pokemonImg = remember {
+                        val pokemonImg = remember {
                             it.arguments?.getString("pokemonImg")
-                        }*/
-                        PokemonDetailScreen(dominantColor = dominantColor,
+                        }
+                        PokemonDetailScreen(
+                            dominantColor = dominantColor,
                             pokemonName = pokemonName?.lowercase(Locale.ROOT) ?: "",
-                            /*pokemonImg = pokemonImg!!,*/
+                            pokemonImg = pokemonImg!!,
                             navController = navController)
                     }
 

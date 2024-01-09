@@ -35,6 +35,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.pokedex_2_0.data.models.PokemonEntry
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @Composable
 fun PokemonListScreen(navController: NavController) {
@@ -66,6 +68,7 @@ fun PokemonEntry(
     var color by remember {
         mutableStateOf(defaultColor)
     }
+    val encodedUrl = URLEncoder.encode(entry.imageUrl, StandardCharsets.UTF_8.toString())
 
     Box(contentAlignment = Alignment.Center,
         modifier = modifier
@@ -74,7 +77,7 @@ fun PokemonEntry(
             .background(color)
             .clickable {
                 navController.navigate(
-                    "pokemon_detail_screen/${color.toArgb()}/${entry.pokemonName}"
+                    "pokemon_detail_screen/${color.toArgb()}/${entry.pokemonName}/${encodedUrl.substring(0,encodedUrl.lastIndex)}"
                 )
             }) {
         Column {
