@@ -1,14 +1,15 @@
 package com.example.pokedex_2_0.pokemondetail
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -18,12 +19,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -31,9 +34,10 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.pokedex_2_0.data.models.request.Pokemon
 import com.example.pokedex_2_0.data.models.request.pokemondetail.Type
+import com.example.pokedex_2_0.ui.theme.LightBlack
 import com.example.pokedex_2_0.util.Resource
 import com.example.pokedex_2_0.util.parseTypeToColor
-import java.util.Locale
+import kotlin.math.round
 
 @Composable
 fun PokemonDetailScreen(
@@ -48,13 +52,16 @@ fun PokemonDetailScreen(
     }.value
     Box(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .background(LightBlack),
     ) {
-        PokemonTop(
+        PokemonBase(
             pokemonInfo = pokemonInfo,
             pokemonImg = pokemonImg,
             pokemonName = pokemonName,
             dominantColor = dominantColor,
+            modifier = Modifier
+                .align(Alignment.Center)
         )
 
     }
@@ -69,13 +76,86 @@ fun PokemonDetailSection(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .fillMaxSize()
-            .offset(y = 100.dp)
     ) {
         Text(
             text = pokemonInfo.name,
+            fontSize = 30.sp,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
             color = Color.White,
+        )
+        PokemonTypeSection(types = pokemonInfo.types)
+        PokemonDetailDataSection(
+            pokemonWeight = pokemonInfo.weight,
+            pokemonHeight = pokemonInfo.height
+        )
+    }
+}
+
+@Composable
+fun PokemonDetailDataItem(
+    dataValue: Float,
+    dataUnit: String,
+    dataCharacteristic: String,
+    modifier: Modifier = Modifier
+) {
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = modifier
+    ) {
+        Text(
+            text = "$dataValue $dataUnit",
+            fontWeight = FontWeight.Bold,
+            fontSize = 25.sp,
+            color = Color.White
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = dataCharacteristic,
+            fontSize = 20.sp,
+            color = Color.Gray
+        )
+    }
+}
+
+@Composable
+fun PokemonDetailDataSection(
+    pokemonWeight: Int,
+    pokemonHeight: Int,
+    sectionHeight: Dp = 8.dp
+) {
+    val pokemonWeightInKg = remember {
+        round(pokemonWeight * 100f) / 1000f
+    }
+    val pokemonHeightInM = remember {
+        round(pokemonHeight * 100f) / 1000f
+    }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        PokemonDetailDataItem(
+            dataValue = pokemonWeightInKg,
+            dataUnit = "KG",
+            dataCharacteristic = "Weight",
+            modifier = Modifier
+                .weight(1f)
+        )
+
+        Spacer(
+            modifier = Modifier
+                .size(1.dp, sectionHeight)
+        )
+
+
+        PokemonDetailDataItem(
+            dataValue = pokemonHeightInM,
+            dataUnit = "M",
+            dataCharacteristic = "Height",
+            modifier = Modifier
+                .weight(1f)
         )
     }
 }
@@ -97,9 +177,10 @@ fun PokemonTypeSection(types: List<Type>) {
                     .height(35.dp)
             ) {
                 Text(
-                    text = type.type.name.capitalize(Locale.ROOT),
-                    color = Color.Gray,
-                    fontSize = 18.sp
+                    text = type.type.name,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp
                 )
             }
         }
@@ -107,47 +188,28 @@ fun PokemonTypeSection(types: List<Type>) {
 }
 
 @Composable
-fun PokemonTop(
+fun PokemonBase(
     pokemonInfo: Resource<Pokemon>,
     pokemonImg: String,
     pokemonName: String,
     dominantColor: Color,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     when (pokemonInfo) {
         is Resource.Success -> {
-            Box(
-                modifier = modifier
-                    .fillMaxHeight(0.3f)
-                    .fillMaxWidth()
-                    .clip(
-                        RoundedCornerShape(
-                            bottomStart = 20.dp,
-                            bottomEnd = 20.dp
-                        )
-                    )
-                    .background(dominantColor),
-            ) {
-                Row(modifier = Modifier
-                    .padding(
-                        horizontal = 10.dp
-                    )) {
-                    Text(text = "Pokedex",
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White)
-                    AsyncImage(
-                        model = pokemonImg,
-                        contentDescription = pokemonName,
-                        modifier = Modifier
-                            .size(250.dp)
-                            .padding(horizontal = 12.dp),
-                    )
+            Column {
+                PokemonTop(
+                    pokemonImg = pokemonImg,
+                    pokemonName = pokemonName,
+                    dominantColor = dominantColor,
+                    pokemonInfo = pokemonInfo.data!!
+                )
+                Spacer(modifier = Modifier.height(20.dp))
 
-                }
+                PokemonDetailSection(
+                    pokemonInfo = pokemonInfo.data,
+                )
             }
-
-
         }
 
         is Resource.Error -> {
@@ -160,8 +222,59 @@ fun PokemonTop(
 
         is Resource.Loading -> {
             CircularProgressIndicator(
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
+                modifier = modifier
             )
+        }
+    }
+}
+
+@Composable
+fun PokemonTop(
+    pokemonImg: String,
+    pokemonName: String,
+    dominantColor: Color,
+    pokemonInfo: Pokemon,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .fillMaxHeight(0.3f)
+            .fillMaxWidth()
+            .clip(
+                RoundedCornerShape(
+                    bottomStart = 20.dp,
+                    bottomEnd = 20.dp
+                )
+            )
+            .background(dominantColor),
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(
+                    horizontal = 10.dp
+                )
+        ) {
+            Text(
+                text = "Pokedex",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+            AsyncImage(
+                model = pokemonImg,
+                contentDescription = pokemonName,
+                modifier = Modifier
+                    .size(250.dp)
+                    .padding(horizontal = 12.dp),
+            )
+            Text(
+                text = "#00${pokemonInfo.id}",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+
         }
     }
 }

@@ -35,6 +35,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.pokedex_2_0.data.models.PokemonEntry
+import com.example.pokedex_2_0.ui.theme.LightBlack
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
@@ -42,7 +43,7 @@ import java.nio.charset.StandardCharsets
 fun PokemonListScreen(navController: NavController) {
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
+        color = LightBlack
     ) {
         PokemonList(navController = navController)
     }
