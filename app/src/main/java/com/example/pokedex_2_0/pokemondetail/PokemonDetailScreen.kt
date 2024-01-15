@@ -49,6 +49,7 @@ import com.example.pokedex_2_0.util.Resource
 import com.example.pokedex_2_0.util.parseStatToAbbr
 import com.example.pokedex_2_0.util.parseStatToColor
 import com.example.pokedex_2_0.util.parseTypeToColor
+import kotlin.math.absoluteValue
 import kotlin.math.round
 
 @Composable
@@ -330,14 +331,20 @@ fun PokemonStat(
             animDuration, animDelay
         )
     )
+    val textShow = remember {
+        statValue * 100 / maxValue.toFloat()
+    }
+
     LaunchedEffect(key1 = true) {
         animationPlayed = true
     }
     Row(
         modifier = Modifier.padding(horizontal = 10.dp),
     ) {
-        Box(modifier = Modifier
-            .fillMaxWidth(0.16f)) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth(0.16f)
+        ) {
             Text(
                 text = statName,
                 color = Color.Gray,
@@ -348,14 +355,12 @@ fun PokemonStat(
             )
         }
 
-
-        Box(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(20.dp)
+                .height(23.dp)
                 .clip(CircleShape)
                 .background(Color.White)
-
         ) {
             Row(
                 horizontalArrangement = Arrangement.End,
@@ -365,13 +370,23 @@ fun PokemonStat(
                     .fillMaxWidth(curPercent.value)
                     .clip(CircleShape)
                     .background(statColor)
-                    .padding(horizontal = 8.dp)
+                    .padding(horizontal = 8.dp, vertical = 1.dp)
             ) {
-
+                if (textShow.absoluteValue.toInt() > 20) {
+                    Text(
+                        text = "${statValue}/$maxValue",
+                        fontSize = 16.sp,
+                        color = Color.White
+                    )
+                }
+            }
+            if (textShow.absoluteValue.toInt() <= 20) {
                 Text(
                     text = "${statValue}/$maxValue",
                     fontSize = 16.sp,
-                    color = Color.White
+                    color = Color.Black,
+                    modifier = Modifier
+                        .padding(start = (curPercent.value + 8).dp)
                 )
             }
         }

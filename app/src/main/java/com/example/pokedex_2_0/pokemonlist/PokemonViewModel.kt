@@ -53,7 +53,7 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
             _status.value = PokemonApiStatus.LOADING
             try {
                 val request = pokemonRepository
-                    .getPokemonList(PAGE_SIZE, currentPage)
+                    .getPokemonList(PAGE_SIZE, currentPage * PAGE_SIZE)
 
                 val pokemonEntry = request.data!!.results.mapIndexed { index, pokemon ->
                     val number = if (pokemon.url.endsWith("/")) {
