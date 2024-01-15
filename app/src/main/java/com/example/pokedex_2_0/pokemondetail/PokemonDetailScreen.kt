@@ -44,7 +44,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.pokedex_2_0.data.models.request.Pokemon
 import com.example.pokedex_2_0.data.models.request.pokemondetail.Type
-import com.example.pokedex_2_0.ui.theme.LightBlack
+import com.example.pokedex_2_0.ui.theme.Black
 import com.example.pokedex_2_0.util.Resource
 import com.example.pokedex_2_0.util.parseStatToAbbr
 import com.example.pokedex_2_0.util.parseStatToColor
@@ -65,7 +65,7 @@ fun PokemonDetailScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(LightBlack),
+            .background(Black),
     ) {
         PokemonBase(
             navController = navController,
@@ -287,12 +287,12 @@ fun PokemonTopDetail(
             )
             Text(
                 text = "Pokedex",
-                fontSize = 16.sp,
+                fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
                 modifier = Modifier
                     .padding(horizontal = 10.dp),
-                )
+            )
         }
 
         Text(
@@ -303,7 +303,7 @@ fun PokemonTopDetail(
             } else {
                 "#00$pokemonId"
             },
-            fontSize = 16.sp,
+            fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             color = Color.White,
             modifier = Modifier.align(Alignment.TopEnd),
@@ -315,17 +315,17 @@ fun PokemonTopDetail(
 fun PokemonStat(
     statName: String,
     statValue: Int,
-    maxState: Int,
+    maxValue: Int,
     statColor: Color,
     animDuration: Int = 1000,
-    animDelay: Int = 0
+    animDelay: Int = 0,
 ) {
     var animationPlayed by remember {
         mutableStateOf(false)
     }
     val curPercent = animateFloatAsState(
         targetValue = if (animationPlayed) {
-            statValue / maxState.toFloat()
+            statValue / maxValue.toFloat()
         } else 0f, label = "animate stat: $statName", animationSpec = tween(
             animDuration, animDelay
         )
@@ -333,30 +333,47 @@ fun PokemonStat(
     LaunchedEffect(key1 = true) {
         animationPlayed = true
     }
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(20.dp)
-            .padding(horizontal = 2.dp)
-            .clip(CircleShape)
-            .background(Color.White)
+    Row(
+        modifier = Modifier.padding(horizontal = 10.dp),
     ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth(curPercent.value)
-                .clip(CircleShape)
-                .background(statColor)
+        Box(modifier = Modifier
+            .fillMaxWidth(0.16f)) {
+            Text(
+                text = statName,
+                color = Color.Gray,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .padding(horizontal = (10).dp)
 
+            )
+        }
+
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(20.dp)
+                .clip(CircleShape)
+                .background(Color.White)
 
         ) {
-            Text(
-                text = "${statValue}/$maxState",
-                fontSize = 16.sp,
-                color = Color.White,
-                modifier = Modifier.padding(horizontal = 8.dp)
+            Row(
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .fillMaxWidth(curPercent.value)
+                    .clip(CircleShape)
+                    .background(statColor)
+                    .padding(horizontal = 8.dp)
+            ) {
+
+                Text(
+                    text = "${statValue}/$maxValue",
+                    fontSize = 16.sp,
+                    color = Color.White
                 )
+            }
         }
     }
 }
@@ -385,15 +402,16 @@ fun PokemonBaseStats(
 
         for (i in pokemonInfo.stats.indices) {
             val stat = pokemonInfo.stats[i]
-            PokemonStat(
-                statName = parseStatToAbbr(stat),
-                statValue = stat.base_stat,
-                maxState = maxBaseState,
-                statColor = parseStatToColor(stat),
-                animDelay = i * animDelayPerItem
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
+            if (parseStatToAbbr(stat).isNotEmpty()) {
+                PokemonStat(
+                    statName = parseStatToAbbr(stat),
+                    statValue = stat.base_stat,
+                    maxValue = maxBaseState,
+                    statColor = parseStatToColor(stat),
+                    animDelay = i * animDelayPerItem
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+            }
 
         }
     }

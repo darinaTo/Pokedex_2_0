@@ -53,7 +53,7 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
             _status.value = PokemonApiStatus.LOADING
             try {
                 val request = pokemonRepository
-                    .getPokemonList(PAGE_SIZE, currentPage * PAGE_SIZE)
+                    .getPokemonList(PAGE_SIZE, currentPage)
 
                 val pokemonEntry = request.data!!.results.mapIndexed { index, pokemon ->
                     val number = if (pokemon.url.endsWith("/")) {
@@ -67,7 +67,6 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
                     PokemonEntry(pokemon.name.capitalize(Locale.ROOT), url, number.toInt())
                 }
                 currentPage++
-
                 _pokemonList.value = _pokemonList.value.plus(pokemonEntry)
                 _status.value = PokemonApiStatus.DONE
 
