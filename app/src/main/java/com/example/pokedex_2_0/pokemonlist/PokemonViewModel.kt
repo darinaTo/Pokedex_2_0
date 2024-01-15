@@ -64,6 +64,8 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
                     val url =
                         "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${number}.png "
 
+//TODO:change to map and add url to const
+
                     PokemonEntry(pokemon.name.capitalize(Locale.ROOT), url, number.toInt())
                 }
                 currentPage++

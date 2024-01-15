@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -36,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -72,7 +75,6 @@ fun PokemonDetailScreen(
             navController = navController,
             pokemonInfo = pokemonInfo,
             pokemonImg = pokemonImg,
-            pokemonName = pokemonName,
             dominantColor = dominantColor,
             modifier = Modifier.align(Alignment.Center)
         )
@@ -190,7 +192,6 @@ fun PokemonBase(
     navController: NavController,
     pokemonInfo: Resource<Pokemon>,
     pokemonImg: String,
-    pokemonName: String,
     dominantColor: Color,
     modifier: Modifier = Modifier,
 ) {
@@ -339,28 +340,29 @@ fun PokemonStat(
         animationPlayed = true
     }
     Row(
-        modifier = Modifier.padding(horizontal = 10.dp),
+        modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth(0.16f)
-        ) {
-            Text(
-                text = statName,
-                color = Color.Gray,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .padding(horizontal = (10).dp)
 
-            )
-        }
+        Text(
+            text = statName,
+            color = Color.Gray,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .weight(0.17f),
+            textAlign = TextAlign.Center
+
+
+        )
 
         Row(
             modifier = Modifier
-                .fillMaxWidth()
                 .height(23.dp)
                 .clip(CircleShape)
                 .background(Color.White)
+                .weight(1f)
         ) {
             Row(
                 horizontalArrangement = Arrangement.End,
@@ -393,7 +395,6 @@ fun PokemonStat(
     }
 }
 
-
 @Composable
 fun PokemonBaseStats(
     pokemonInfo: Pokemon, animDelayPerItem: Int = 100
@@ -414,20 +415,19 @@ fun PokemonBaseStats(
             fontWeight = FontWeight.Bold,
         )
         Spacer(modifier = Modifier.height(15.dp))
-
-        for (i in pokemonInfo.stats.indices) {
-            val stat = pokemonInfo.stats[i]
-            if (parseStatToAbbr(stat).isNotEmpty()) {
-                PokemonStat(
-                    statName = parseStatToAbbr(stat),
-                    statValue = stat.base_stat,
-                    maxValue = maxBaseState,
-                    statColor = parseStatToColor(stat),
-                    animDelay = i * animDelayPerItem
-                )
-                Spacer(modifier = Modifier.height(12.dp))
+        LazyColumn {
+            items(pokemonInfo.stats) { item ->
+                val index = pokemonInfo.stats.indexOf(item)
+                if (parseStatToAbbr(item).isNotEmpty()) {
+                        PokemonStat(
+                            statName = parseStatToAbbr(item),
+                            statValue = item.base_stat,
+                            maxValue = maxBaseState,
+                            statColor = parseStatToColor(item),
+                            animDelay = index * animDelayPerItem
+                        )
+                }
             }
-
         }
     }
 }
