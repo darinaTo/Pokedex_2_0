@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -15,7 +16,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -163,15 +168,17 @@ fun PokemonDetailDataSection(
 
 @Composable
 fun PokemonTypeSection(types: List<Type>) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(16.dp)
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(types.size),
+        modifier = Modifier
+            .padding(horizontal = 20.dp)
     ) {
-        for (type in types) {
+        items(types) { type ->
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 8.dp)
+                    .width(IntrinsicSize.Max)
+                    .padding(top = 16.dp, bottom = 16.dp)
                     .clip(CircleShape)
                     .background(parseTypeToColor(type))
                     .height(35.dp)
@@ -183,8 +190,19 @@ fun PokemonTypeSection(types: List<Type>) {
                     fontSize = 20.sp
                 )
             }
+
         }
     }
+
+    /*  LazyRow(
+          verticalAlignment = Alignment.CenterVertically,
+          modifier = Modifier
+              .padding(16.dp)
+      ) {
+          items(types) { type ->
+
+          }
+      }*/
 }
 
 @Composable
@@ -300,10 +318,10 @@ fun PokemonTopDetail(
         Text(
             text = if (pokemonId > 10) {
                 "#0$pokemonId"
-            } else if (pokemonId > 100) {
-                "$pokemonId"
-            } else {
+            } else if (pokemonId < 10) {
                 "#00$pokemonId"
+            } else {
+                "$pokemonId"
             },
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
@@ -340,7 +358,8 @@ fun PokemonStat(
         animationPlayed = true
     }
     Row(
-        modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp)
+        modifier = Modifier
+            .padding(horizontal = 10.dp, vertical = 8.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -419,13 +438,13 @@ fun PokemonBaseStats(
             items(pokemonInfo.stats) { item ->
                 val index = pokemonInfo.stats.indexOf(item)
                 if (parseStatToAbbr(item).isNotEmpty()) {
-                        PokemonStat(
-                            statName = parseStatToAbbr(item),
-                            statValue = item.base_stat,
-                            maxValue = maxBaseState,
-                            statColor = parseStatToColor(item),
-                            animDelay = index * animDelayPerItem
-                        )
+                    PokemonStat(
+                        statName = parseStatToAbbr(item),
+                        statValue = item.base_stat,
+                        maxValue = maxBaseState,
+                        statColor = parseStatToColor(item),
+                        animDelay = index * animDelayPerItem
+                    )
                 }
             }
         }
