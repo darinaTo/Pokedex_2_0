@@ -178,7 +178,7 @@ fun PokemonTypeSection(types: List<Type>) {
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .width(IntrinsicSize.Max)
-                    .padding(top = 16.dp, bottom = 16.dp)
+                    .padding(13.dp)
                     .clip(CircleShape)
                     .background(parseTypeToColor(type))
                     .height(35.dp)

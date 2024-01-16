@@ -61,10 +61,8 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
                     } else {
                         pokemon.url.takeLastWhile { it.isDigit() }
                     }
-                    val url =
-                        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${number}.png "
 
-//TODO:change to map and add url to const
+                    val url = getPokemonImageUrl(number.toInt())
 
                     PokemonEntry(pokemon.name.capitalize(Locale.ROOT), url, number.toInt())
                 }
@@ -76,6 +74,10 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
                 _status.value = PokemonApiStatus.ERROR
             }
         }
+    }
+
+    fun getPokemonImageUrl(number: Int): String {
+        return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${number}.png "
     }
 
 }
