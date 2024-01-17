@@ -8,11 +8,11 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PokemonDao {
-    @Query("select image from pokemon")
-    fun getPokemonImg() : Flow<List<String>>
+    @Query("select * from pokemon")
+    fun getListPokemon() : Flow<List<PokemonEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(pokemonEntity: PokemonEntity)
+    fun insertAll(pokemonList: List<PokemonEntity>)
 }
 
 

@@ -1,14 +1,26 @@
 package com.example.pokedex_2_0.network
 
-/*
-import com.example.pokedex_2_0.data.models.request.Pokemon
-import com.example.pokedex_2_0.data.models.request.PokemonRequest
-import com.example.pokedex_2_0.data.models.request.Result
-import com.example.pokedex_2_0.database.PokemonDatabase
+import com.example.pokedex_2_0.data.models.PokemonEntry
 import com.example.pokedex_2_0.database.PokemonEntity
 
 
-fun asDatabaseModel(pokemon: PokemonRequest): PokemonEntity {
 
+fun List<PokemonEntry>.asModelToDatabase(): List<PokemonEntity> {
+    return map {
+        PokemonEntity(
+            id = it.number,
+            image = it.imageUrl,
+            name = it.pokemonName
+        )
+    }
 }
-*/
+
+fun List<PokemonEntity>.asDatabaseToModel() : List<PokemonEntry> {
+    return map {
+        PokemonEntry(
+            pokemonName = it.name,
+            imageUrl = it.image,
+            number = it.id
+        )
+    }
+}

@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.util.Locale
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,6 +35,7 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
 
 
     init {
+        savePokemon()
         getPokemon()
     }
 
@@ -48,36 +49,30 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
         }
     }
 
+    private fun savePokemon() = viewModelScope.launch {
+        try {
+            pokemonRepository.savePokemonList(PAGE_SIZE, currentPage * PAGE_SIZE)
+        } catch (e: IOException) {
+            throw RuntimeException("Can't save pokemon to data base $e")
+        }
+    }
+
     fun getPokemon() {
         viewModelScope.launch {
             _status.value = PokemonApiStatus.LOADING
             try {
-                val request = pokemonRepository
-                    .getPokemonList(PAGE_SIZE, currentPage * PAGE_SIZE)
-
-                val pokemonEntry = request.data!!.results.mapIndexed { index, pokemon ->
-                    val number = if (pokemon.url.endsWith("/")) {
-                        pokemon.url.dropLast(1).takeLastWhile { it.isDigit() }
-                    } else {
-                        pokemon.url.takeLastWhile { it.isDigit() }
-                    }
-
-                    val url = getPokemonImageUrl(number.toInt())
-
-                    PokemonEntry(pokemon.name.capitalize(Locale.ROOT), url, number.toInt())
-                }
+                val pokemonEntry = pokemonRepository.pokemonList.value!!
                 currentPage++
                 _pokemonList.value = _pokemonList.value.plus(pokemonEntry)
                 _status.value = PokemonApiStatus.DONE
 
+
             } catch (e: Exception) {
                 _status.value = PokemonApiStatus.ERROR
+                throw RuntimeException("Can't get pokemon from data base, $e")
             }
         }
     }
 
-    fun getPokemonImageUrl(number: Int): String {
-        return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${number}.png "
-    }
 
 }
