@@ -55,7 +55,9 @@ fun PokemonList(
     navController: NavController,
     viewModel: PokemonViewModel = hiltViewModel()
 ) {
+    viewModel.getPokemon()
     val pokemonList by viewModel.pokemonList.collectAsStateWithLifecycle()
+
     PokemonGrid(entriesList = pokemonList, navController = navController)
 }
 

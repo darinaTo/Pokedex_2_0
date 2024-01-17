@@ -23,7 +23,7 @@ import javax.inject.Singleton
 object AppModule {
     @Singleton
     @Provides
-    fun providePokemonRepository(dao: PokemonDao, api: PokeApi) = PokemonRepository(dao, api)
+    fun providePokemonRepository(dao: PokemonDao, api: PokeApi) : PokemonRepository = PokemonRepository(dao, api)
 
     @Singleton
     @Provides
@@ -45,9 +45,8 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun providesDao(appDatabase: PokemonDatabase): PokemonDao {
-      return appDatabase.pokemonDao()
-    }
+    fun provideDao(appDatabase: PokemonDatabase): PokemonDao = appDatabase.pokemonDao()
+
 
     @Singleton
     @Provides

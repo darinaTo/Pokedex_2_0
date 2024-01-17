@@ -14,6 +14,7 @@ import com.example.pokedex_2_0.repository.PokemonRepository
 import com.example.pokedex_2_0.util.Constants.PAGE_SIZE
 import com.example.pokedex_2_0.util.PokemonApiStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -36,7 +37,6 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
 
     init {
         savePokemon()
-        getPokemon()
     }
 
     fun calcColor(drawable: Drawable, onFinish: (Color) -> Unit) {
@@ -52,6 +52,7 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
     private fun savePokemon() = viewModelScope.launch {
         try {
             pokemonRepository.savePokemonList(PAGE_SIZE, currentPage * PAGE_SIZE)
+            delay(1000)
         } catch (e: IOException) {
             throw RuntimeException("Can't save pokemon to data base $e")
         }

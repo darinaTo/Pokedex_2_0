@@ -41,7 +41,6 @@ val pokemonList : LiveData<List<PokemonEntry>> = dao.getListPokemon().map { it.a
                 } else {
                     pokemon.url.takeLastWhile { it.isDigit() }
                 }
-
                 val url = getPokemonImageUrl(number.toInt())
                 PokemonEntry(pokemon.name, url, number.toInt())
             }
