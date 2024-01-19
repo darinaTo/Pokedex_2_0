@@ -14,12 +14,10 @@ import com.example.pokedex_2_0.repository.PokemonRepository
 import com.example.pokedex_2_0.util.Constants.PAGE_SIZE
 import com.example.pokedex_2_0.util.PokemonApiStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,7 +34,9 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
 
 
     init {
-        savePokemon()
+        viewModelScope.launch {
+          refreshPokemonList()
+        }
     }
 
     fun calcColor(drawable: Drawable, onFinish: (Color) -> Unit) {
@@ -49,22 +49,13 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
         }
     }
 
-    private fun savePokemon() = viewModelScope.launch {
-        try {
-            pokemonRepository.savePokemonList(PAGE_SIZE, currentPage * PAGE_SIZE)
-            delay(1000)
-        } catch (e: IOException) {
-            throw RuntimeException("Can't save pokemon to data base $e")
-        }
-    }
-
     fun getPokemon() {
         viewModelScope.launch {
             _status.value = PokemonApiStatus.LOADING
             try {
-                val pokemonEntry = pokemonRepository.pokemonList.value!!
                 currentPage++
-                _pokemonList.value = _pokemonList.value.plus(pokemonEntry)
+                pokemonRepository.savePokemonList(PAGE_SIZE, currentPage * PAGE_SIZE)
+                refreshPokemonList()
                 _status.value = PokemonApiStatus.DONE
 
 
@@ -75,5 +66,11 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
         }
     }
 
-
+   private suspend fun refreshPokemonList() {
+        viewModelScope.launch {
+            pokemonRepository.pokemonList.collect{
+                _pokemonList.value = it
+            }
+        }
+    }
 }

@@ -1,7 +1,5 @@
 package com.example.pokedex_2_0.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.asLiveData
 import com.example.pokedex_2_0.data.models.PokemonEntry
 import com.example.pokedex_2_0.data.models.request.Pokemon
 import com.example.pokedex_2_0.data.models.request.PokemonRequest
@@ -12,6 +10,7 @@ import com.example.pokedex_2_0.network.asModelToDatabase
 import com.example.pokedex_2_0.util.Resource
 import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -21,7 +20,7 @@ class PokemonRepository @Inject constructor(
     private val dao: PokemonDao,
     private val api: PokeApi
 ) {
-val pokemonList : LiveData<List<PokemonEntry>> = dao.getListPokemon().map { it.asDatabaseToModel() }.asLiveData()
+val pokemonList : Flow<List<PokemonEntry>> = dao.getListPokemon().map { it.asDatabaseToModel() }
     suspend fun getPokemonInfo(name: String): Resource<Pokemon> {
         val response = try {
             api.getPokemonInfo(name)
@@ -35,7 +34,7 @@ val pokemonList : LiveData<List<PokemonEntry>> = dao.getListPokemon().map { it.a
         withContext(Dispatchers.IO) {
             val pokemonList = getPokemonList(limit, offset)
 
-            val pokemonEntry = pokemonList.data!!.results.mapIndexed { _, pokemon ->
+         val pokemonEntry =     pokemonList.data!!.results.mapIndexed { _, pokemon ->
                 val number = if (pokemon.url.endsWith("/")) {
                     pokemon.url.dropLast(1).takeLastWhile { it.isDigit() }
                 } else {
@@ -44,10 +43,10 @@ val pokemonList : LiveData<List<PokemonEntry>> = dao.getListPokemon().map { it.a
                 val url = getPokemonImageUrl(number.toInt())
                 PokemonEntry(pokemon.name, url, number.toInt())
             }
+
              dao.insertAll(pokemonEntry.asModelToDatabase())
         }
     }
-
     private suspend fun getPokemonList(limit: Int, offset: Int): Resource<PokemonRequest> {
         val response = try {
             api.getPokemonList(limit, offset)

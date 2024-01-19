@@ -24,3 +24,12 @@ fun List<PokemonEntity>.asDatabaseToModel() : List<PokemonEntry> {
         )
     }
 }
+
+
+fun PokemonEntry.asOneModelToDatabase(): PokemonEntity {
+   return PokemonEntity(
+       id = this.number,
+       image = this.imageUrl,
+       name =  this.pokemonName
+   )
+}
