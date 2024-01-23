@@ -35,7 +35,8 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
 
     init {
         viewModelScope.launch {
-          refreshPokemonList()
+            getPokemon()
+            refreshPokemonList()
         }
     }
 
@@ -53,8 +54,8 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
         viewModelScope.launch {
             _status.value = PokemonApiStatus.LOADING
             try {
-                currentPage++
                 pokemonRepository.savePokemonList(PAGE_SIZE, currentPage * PAGE_SIZE)
+                currentPage++
                 refreshPokemonList()
                 _status.value = PokemonApiStatus.DONE
 
@@ -66,9 +67,9 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
         }
     }
 
-   private suspend fun refreshPokemonList() {
+    private suspend fun refreshPokemonList() {
         viewModelScope.launch {
-            pokemonRepository.pokemonList.collect{
+            pokemonRepository.pokemonList.collect {
                 _pokemonList.value = it
             }
         }
