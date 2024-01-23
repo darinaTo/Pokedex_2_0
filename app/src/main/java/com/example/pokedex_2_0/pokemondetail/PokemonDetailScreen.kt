@@ -50,7 +50,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.example.pokedex_2_0.data.models.request.Pokemon
+import com.example.pokedex_2_0.data.models.request.pokemondetail.Pokemon
 import com.example.pokedex_2_0.data.models.request.pokemondetail.Type
 import com.example.pokedex_2_0.ui.theme.Black
 import com.example.pokedex_2_0.util.Resource

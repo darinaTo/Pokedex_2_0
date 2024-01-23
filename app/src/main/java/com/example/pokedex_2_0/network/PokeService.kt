@@ -1,7 +1,7 @@
 package com.example.pokedex_2_0.network
 
-import com.example.pokedex_2_0.data.models.request.Pokemon
 import com.example.pokedex_2_0.data.models.request.PokemonRequest
+import com.example.pokedex_2_0.data.models.request.pokemondetail.Pokemon
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

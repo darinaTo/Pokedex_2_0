@@ -1,8 +1,8 @@
 package com.example.pokedex_2_0.repository
 
 import com.example.pokedex_2_0.data.models.PokemonEntry
-import com.example.pokedex_2_0.data.models.request.Pokemon
 import com.example.pokedex_2_0.data.models.request.PokemonRequest
+import com.example.pokedex_2_0.data.models.request.pokemondetail.Pokemon
 import com.example.pokedex_2_0.database.PokemonDao
 import com.example.pokedex_2_0.network.PokeApi
 import com.example.pokedex_2_0.network.asDatabaseToModel
