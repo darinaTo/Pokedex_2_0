@@ -1,7 +1,7 @@
 package com.example.pokedex_2_0.network
 
 import com.example.pokedex_2_0.data.models.PokemonEntry
-import com.example.pokedex_2_0.database.PokemonEntity
+import com.example.pokedex_2_0.database.entities.PokemonEntity
 
 
 

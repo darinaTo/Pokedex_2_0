@@ -14,6 +14,7 @@ import com.example.pokedex_2_0.repository.PokemonRepository
 import com.example.pokedex_2_0.util.Constants.PAGE_SIZE
 import com.example.pokedex_2_0.util.PokemonApiStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,8 +35,8 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
 
 
     init {
-        viewModelScope.launch {
-            getPokemon()
+        viewModelScope.launch(Dispatchers.IO) {
+            pokemonRepository.savePokemonList(PAGE_SIZE, currentPage * PAGE_SIZE)
             refreshPokemonList()
         }
     }
@@ -68,10 +69,9 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
     }
 
     private suspend fun refreshPokemonList() {
-        viewModelScope.launch {
+        //TODO:onEach in Flow
             pokemonRepository.pokemonList.collect {
                 _pokemonList.value = it
             }
-        }
     }
 }

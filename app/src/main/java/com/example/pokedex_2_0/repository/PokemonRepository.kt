@@ -20,21 +20,12 @@ class PokemonRepository @Inject constructor(
     private val dao: PokemonDao,
     private val api: PokeApi
 ) {
-val pokemonList : Flow<List<PokemonEntry>> = dao.getListPokemon().map { it.asDatabaseToModel() }
-    suspend fun getPokemonInfo(name: String): Resource<Pokemon> {
-        val response = try {
-            api.getPokemonInfo(name)
-        } catch (e: Exception) {
-            return Resource.Error("An unknown error occurred.")
-        }
-        return Resource.Success(response)
-    }
+    val pokemonList: Flow<List<PokemonEntry>> = dao.getListPokemon().map { it.asDatabaseToModel() }
+    suspend fun savePokemonList(limit: Int, offset: Int) {
 
-    suspend fun savePokemonList(limit: Int, offset: Int)  {
-        withContext(Dispatchers.IO) {
             val pokemonList = getPokemonList(limit, offset)
-
-         val pokemonEntry =     pokemonList.data!!.results.mapIndexed { _, pokemon ->
+//TODO: винести в маппер on Sucsess
+            val pokemonEntry = pokemonList.data!!.results.mapIndexed { _, pokemon ->
                 val number = if (pokemon.url.endsWith("/")) {
                     pokemon.url.dropLast(1).takeLastWhile { it.isDigit() }
                 } else {
@@ -44,9 +35,28 @@ val pokemonList : Flow<List<PokemonEntry>> = dao.getListPokemon().map { it.asDat
                 PokemonEntry(pokemon.name, url, number.toInt())
             }
 
-             dao.insertAll(pokemonEntry.asModelToDatabase())
-        }
+            dao.insertAll(pokemonEntry.asModelToDatabase())
+
     }
+//create separate interface for repository
+    suspend fun savePokemonInfo(name: String) {
+        withContext(Dispatchers.IO) {
+            val pokemonInfo = getPokemonInfo(name)
+            pokemonInfo
+
+        }
+
+    }
+
+    suspend fun getPokemonInfo(name: String): Resource<Pokemon> {
+        val response = try {
+            api.getPokemonInfo(name)
+        } catch (e: Exception) {
+            return Resource.Error("An unknown error occurred.")
+        }
+        return Resource.Success(response)
+    }
+//changed Resource to Result from kt
     private suspend fun getPokemonList(limit: Int, offset: Int): Resource<PokemonRequest> {
         val response = try {
             api.getPokemonList(limit, offset)
