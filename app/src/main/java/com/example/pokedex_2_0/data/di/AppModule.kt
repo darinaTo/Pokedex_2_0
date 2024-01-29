@@ -44,11 +44,12 @@ object AppModule {
             .create(PokeApi::class.java)
     }
 
+    // TODO: move to separate API di module
     @Singleton
     @Provides
     fun provideDao(appDatabase: PokemonDatabase): PokemonDao = appDatabase.pokemonDao()
 
-
+    // TODO: move to separate API di module
     @Singleton
     @Provides
     fun provideAppDatabase(@ApplicationContext appContext: Context): PokemonDatabase {

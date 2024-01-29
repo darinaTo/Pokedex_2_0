@@ -50,7 +50,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.example.pokedex_2_0.data.models.request.pokemondetail.Pokemon
+import com.example.pokedex_2_0.data.models.PokemonUiInfoEntity
 import com.example.pokedex_2_0.data.models.request.pokemondetail.Type
 import com.example.pokedex_2_0.ui.theme.Black
 import com.example.pokedex_2_0.util.Resource
@@ -65,10 +65,12 @@ fun PokemonDetailScreen(
     dominantColor: Color,
     pokemonName: String,
     pokemonImg: String,
+    //todo It is better to pass lambdas instead of navController
+    // https://developer.android.com/codelabs/jetpack-compose-navigation#4
     navController: NavController,
     viewModel: PokemonDetailViewModel = hiltViewModel()
 ) {
-    val pokemonInfo = produceState<Resource<Pokemon>>(initialValue = Resource.Loading()) {
+    val pokemonInfoApiEntityInfo = produceState<Resource<PokemonUiInfoEntity>>(initialValue = Resource.Loading()) {
         value = viewModel.getPokemonInfo(pokemonName)
     }.value
     Box(
@@ -78,7 +80,7 @@ fun PokemonDetailScreen(
     ) {
         PokemonBase(
             navController = navController,
-            pokemonInfo = pokemonInfo,
+            pokemonInfoApiEntityInfo = pokemonInfoApiEntityInfo,
             pokemonImg = pokemonImg,
             dominantColor = dominantColor,
             modifier = Modifier.align(Alignment.Center)
@@ -89,23 +91,23 @@ fun PokemonDetailScreen(
 
 @Composable
 fun PokemonDetailSection(
-    pokemonInfo: Pokemon, modifier: Modifier = Modifier
+    pokemonInfoApiEntityInfo: PokemonUiInfoEntity?, modifier: Modifier = Modifier
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier.fillMaxSize()
     ) {
         Text(
-            text = pokemonInfo.name,
+            text = pokemonInfoApiEntityInfo!!.name,
             fontSize = 30.sp,
             fontWeight = FontWeight.Bold,
             color = Color.White,
         )
-        PokemonTypeSection(types = pokemonInfo.types)
+        PokemonTypeSection(types = pokemonInfoApiEntityInfo.types)
         PokemonDetailDataSection(
-            pokemonWeight = pokemonInfo.weight, pokemonHeight = pokemonInfo.height
+            pokemonWeight = pokemonInfoApiEntityInfo.weight, pokemonHeight = pokemonInfoApiEntityInfo.height
         )
         Spacer(modifier = Modifier.height(20.dp))
-        PokemonBaseStats(pokemonInfo = pokemonInfo)
+        PokemonBaseStats(pokemonInfoApiEntityInfo = pokemonInfoApiEntityInfo)
     }
 }
 
@@ -208,24 +210,24 @@ fun PokemonTypeSection(types: List<Type>) {
 @Composable
 fun PokemonBase(
     navController: NavController,
-    pokemonInfo: Resource<Pokemon>,
+    pokemonInfoApiEntityInfo: Resource<PokemonUiInfoEntity>,
     pokemonImg: String,
     dominantColor: Color,
     modifier: Modifier = Modifier,
 ) {
-    when (pokemonInfo) {
+    when (pokemonInfoApiEntityInfo) {
         is Resource.Success -> {
             Column {
                 PokemonTop(
                     navController = navController,
                     pokemonImg = pokemonImg,
                     dominantColor = dominantColor,
-                    pokemonInfo = pokemonInfo.data!!
+                    pokemonInfoApiEntityInfo = pokemonInfoApiEntityInfo.data!!
                 )
                 Spacer(modifier = Modifier.height(20.dp))
 
                 PokemonDetailSection(
-                    pokemonInfo = pokemonInfo.data,
+                    pokemonInfoApiEntityInfo = pokemonInfoApiEntityInfo.data,
                 )
 
             }
@@ -233,7 +235,7 @@ fun PokemonBase(
 
         is Resource.Error -> {
             Text(
-                text = pokemonInfo.message!!, color = Color.Red, modifier = modifier
+                text = pokemonInfoApiEntityInfo.message!!, color = Color.Red, modifier = modifier
             )
         }
 
@@ -250,7 +252,7 @@ fun PokemonTop(
     navController: NavController,
     pokemonImg: String,
     dominantColor: Color,
-    pokemonInfo: Pokemon,
+    pokemonInfoApiEntityInfo: PokemonUiInfoEntity,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -267,11 +269,11 @@ fun PokemonTop(
         Column {
             PokemonTopDetail(
                 navController = navController,
-                pokemonId = pokemonInfo.id
+                pokemonId = pokemonInfoApiEntityInfo.id
             )
             AsyncImage(
                 model = pokemonImg,
-                contentDescription = pokemonInfo.name,
+                contentDescription = pokemonInfoApiEntityInfo.name,
                 modifier = Modifier
                     .size(250.dp)
                     .padding(horizontal = 20.dp)
@@ -416,10 +418,10 @@ fun PokemonStat(
 
 @Composable
 fun PokemonBaseStats(
-    pokemonInfo: Pokemon, animDelayPerItem: Int = 100
+    pokemonInfoApiEntityInfo: PokemonUiInfoEntity, animDelayPerItem: Int = 100
 ) {
     val maxBaseState = remember {
-        pokemonInfo.stats.maxOf { it.base_stat }
+        pokemonInfoApiEntityInfo.stats.maxOf { it.base_stat }
     }
     Column(
         modifier = Modifier
@@ -435,8 +437,8 @@ fun PokemonBaseStats(
         )
         Spacer(modifier = Modifier.height(15.dp))
         LazyColumn {
-            items(pokemonInfo.stats) { item ->
-                val index = pokemonInfo.stats.indexOf(item)
+            items(pokemonInfoApiEntityInfo.stats) { item ->
+                val index = pokemonInfoApiEntityInfo.stats.indexOf(item)
                 if (parseStatToAbbr(item).isNotEmpty()) {
                     PokemonStat(
                         statName = parseStatToAbbr(item),

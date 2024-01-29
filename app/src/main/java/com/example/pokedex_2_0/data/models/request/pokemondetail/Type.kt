@@ -1,6 +1,9 @@
 package com.example.pokedex_2_0.data.models.request.pokemondetail
 
+import androidx.room.Embedded
+import com.squareup.moshi.Json
+
 data class Type(
-    val slot: Int,
-    val type: TypeX
+    @Embedded
+    @Json(name = "type") val type: TypeX
 )

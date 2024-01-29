@@ -35,11 +35,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.example.pokedex_2_0.data.models.PokemonEntry
+import com.example.pokedex_2_0.data.models.PokemonUiEntity
 import com.example.pokedex_2_0.ui.theme.LightBlack
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
+// TODO: please see similar comment related to passing navControlled as a parameter
 @Composable
 fun PokemonListScreen(navController: NavController) {
     Surface(
@@ -55,7 +56,7 @@ fun PokemonList(
     navController: NavController,
     viewModel: PokemonViewModel = hiltViewModel()
 ) {
-    val pokemonList by viewModel.pokemonList.collectAsStateWithLifecycle()
+    val pokemonList by viewModel.pokemonList.collectAsStateWithLifecycle() // TODO: collectAsStateWithLifecycle() NICE!
 
     PokemonGrid(entriesList = pokemonList, navController = navController)
 }
@@ -64,7 +65,7 @@ fun PokemonList(
 fun PokemonEntry(
     modifier: Modifier = Modifier,
     navController: NavController,
-    entry: PokemonEntry,
+    entry: PokemonUiEntity,
     viewModel: PokemonViewModel = hiltViewModel()
 ) {
     val defaultColor = MaterialTheme.colorScheme.surface
@@ -80,7 +81,12 @@ fun PokemonEntry(
             .background(color)
             .clickable {
                 navController.navigate(
-                    "pokemon_detail_screen/${color.toArgb()}/${entry.pokemonName}/${encodedUrl.substring(0,encodedUrl.lastIndex)}"
+                    "pokemon_detail_screen/${color.toArgb()}/${entry.pokemonName}/${
+                        encodedUrl.substring(
+                            0,
+                            encodedUrl.lastIndex
+                        )
+                    }"
                 )
             }) {
         Column {
@@ -110,7 +116,7 @@ fun PokemonEntry(
 
 @Composable
 fun PokemonGrid(
-    entriesList: List<PokemonEntry>,
+    entriesList: List<PokemonUiEntity>,
     navController: NavController,
     modifier: Modifier = Modifier,
     viewModel: PokemonViewModel = hiltViewModel()

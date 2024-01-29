@@ -30,6 +30,7 @@ import com.example.pokedex_2_0.ui.theme.TypeWater
 import java.util.Locale
 
 fun parseTypeToColor(type: Type): Color {
+    // TODO: Please check IDE's hints about toLowerCase()
     return when (type.type.name.toLowerCase(Locale.ROOT)) {
         "normal" -> TypeNormal
         "fire" -> TypeFire
@@ -54,7 +55,7 @@ fun parseTypeToColor(type: Type): Color {
 }
 
 fun parseStatToColor(stat: Stat): Color {
-    return when (stat.stat.name.toLowerCase()) {
+    return when (stat.statInfo.name.toLowerCase()) {
         "hp" -> HPColor
         "attack" -> AtkColor
         "defense" -> DefColor
@@ -66,7 +67,7 @@ fun parseStatToColor(stat: Stat): Color {
 }
 
 fun parseStatToAbbr(stat: Stat): String {
-    return when (stat.stat.name.toLowerCase()) {
+    return when (stat.statInfo.name.toLowerCase()) {
         "hp" -> "HP"
         "attack" -> "ATK"
         "defense" -> "DEF"

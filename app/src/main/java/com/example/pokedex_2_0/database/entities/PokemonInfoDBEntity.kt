@@ -12,5 +12,5 @@ data class PokemonInfoDBEntity(
     @ColumnInfo(name = "id") val id: Int,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "weight") val weight: Int,
-    @ColumnInfo(name= "height" )val height: Int,
-)
+    @ColumnInfo(name = "height") val height: Int,
+    )
