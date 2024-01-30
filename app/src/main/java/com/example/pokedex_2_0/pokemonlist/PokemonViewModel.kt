@@ -12,6 +12,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.palette.graphics.Palette
 import com.example.pokedex_2_0.data.models.PokemonUiEntity
 import com.example.pokedex_2_0.repository.PokemonRepository
+import com.example.pokedex_2_0.util.Constants.OFFSET
 import com.example.pokedex_2_0.util.Constants.PAGE_SIZE
 import com.example.pokedex_2_0.util.PokemonApiStatus
 import com.example.pokedex_2_0.util.UiState
@@ -45,7 +46,8 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
 
     // TODO: example
     private val _uiState = MutableStateFlow(UiState())
-    val uiState: StateFlow<List<PokemonUiEntity>> = _pokemonList.asStateFlow() //todo collect this state in view
+    val uiState: StateFlow<List<PokemonUiEntity>> =
+        _pokemonList.asStateFlow() //todo collect this state in view
 
     private val pokemonFlow = pokemonRepository.pokemonList.onEach { pokemons ->
         _uiState.update { it.copy(pokemons = pokemons) }
@@ -54,7 +56,7 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
     init {
         viewModelScope.launch(Dispatchers.IO) {
             // TODO: PAGE_SIZE could be as default parameter
-            pokemonRepository.getPokemonList(PAGE_SIZE, currentPage * PAGE_SIZE) // TODO: better to rename to getPokemonList()
+            pokemonRepository.getPokemonList(currentPage, PAGE_SIZE) // TODO: better to rename to getPokemonList()
             refreshPokemonList() // TODO: this line is redundant in case of using pokemonFlow
             pokemonFlow.launchIn(viewModelScope) // todo required for correct work
         }
@@ -77,12 +79,10 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
             _status.postValue(PokemonApiStatus.LOADING)
 
             try {
-                pokemonRepository.getPokemonList(PAGE_SIZE, currentPage * PAGE_SIZE)
-                currentPage++
+                currentPage += OFFSET
+                pokemonRepository.getPokemonList(currentPage, PAGE_SIZE)
                 refreshPokemonList()
                 _status.value = PokemonApiStatus.DONE
-
-
             } catch (e: Exception) {
                 _status.value = PokemonApiStatus.ERROR
                 throw RuntimeException("Can't get pokemon from data base, $e")
@@ -93,12 +93,10 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
     // TODO: in case of using flows this method would be redundant
     private suspend fun refreshPokemonList() {
         //TODO:onEach in Flow
-            pokemonRepository.pokemonList.collect {
+        pokemonRepository.pokemonList.collect {
 
-                Log.i("mytag", "refreshPokemonList VM: ${it.map { it.pokemonName }}")
-                _pokemonList.value = it
-            }
+            Log.i("mytag", "refreshPokemonList VM: ${it.map { it.pokemonName }}")
+            _pokemonList.value = it
+        }
     }
 }
-
-// TODO: add rest required fields and move to separate file

@@ -25,10 +25,11 @@ class PokemonRepository @Inject constructor(
 ) {
     val pokemonList: Flow<List<PokemonUiEntity>> = dao.getListPokemon().map { it.mapToUiEntity() }
     val pokemonInfoFlow: Flow<PokemonUiInfoEntity> = dao.getPokemonInfo().map { it.mapToUiEntity() }
+    val url = "?limit=10&offset=0"
 
-    suspend fun getPokemonList(limit: Int, offset: Int) {
+    suspend fun getPokemonList(offset: Int, limit: Int) {
         withContext(Dispatchers.IO) {
-            val pokemonFromApi = getPokemonListApi(limit, offset)
+            val pokemonFromApi = getPokemonListApi(offset, limit)
             val pokemonData = pokemonFromApi.data
             if (pokemonFromApi is Resource.Success && pokemonData != null) {
               savePokemonList(pokemonData)
@@ -52,7 +53,7 @@ class PokemonRepository @Inject constructor(
     }
 
     private suspend fun savePokemonList(pokemonList : PokemonApiResponse) {
-        val databaseEntities = pokemonList.pokemonApiEntities.mapToDatabaseModel()
+        val databaseEntities = pokemonList.mapToDatabaseModel()
         dao.insertAll(databaseEntities)
     }
     private suspend fun savePokemonInfo(pokemonInfoApiResponse: PokemonInfoApiResponse) {
@@ -75,9 +76,9 @@ class PokemonRepository @Inject constructor(
     }
 
     //changed Resource to Result from kt todo this is not obligatory some sort of box solution
-    private suspend fun getPokemonListApi(limit: Int, offset: Int): Resource<PokemonApiResponse> {
+    private suspend fun getPokemonListApi(offset: Int, limit: Int): Resource<PokemonApiResponse> {
         val response = try {
-            api.getPokemonList(limit, offset)
+            api.getPokemonList(offset, limit)
         } catch (e: Exception) {
             return Resource.Error("An unknown error occurred, exception: ${e.message}")
         }

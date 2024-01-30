@@ -2,7 +2,7 @@ package com.example.pokedex_2_0.network
 
 import com.example.pokedex_2_0.data.models.PokemonUiEntity
 import com.example.pokedex_2_0.data.models.PokemonUiInfoEntity
-import com.example.pokedex_2_0.data.models.request.PokemonApiEntity
+import com.example.pokedex_2_0.data.models.request.PokemonApiResponse
 import com.example.pokedex_2_0.data.models.request.pokemondetail.PokemonInfoApiResponse
 import com.example.pokedex_2_0.data.models.request.pokemondetail.Stat
 import com.example.pokedex_2_0.data.models.request.pokemondetail.StatX
@@ -14,14 +14,14 @@ import com.example.pokedex_2_0.database.entities.PokemonInfoFullInfo
 import com.example.pokedex_2_0.database.entities.StatEntityDB
 import com.example.pokedex_2_0.database.entities.TypeEntity
 
-fun List<PokemonApiEntity>.mapToDatabaseModel(): List<PokemonDBEntity> {
-    return this.map { pokemon ->
+fun PokemonApiResponse.mapToDatabaseModel(): List<PokemonDBEntity> {
+    return this.pokemonApiEntities.map { pokemon ->
         val number = extractPokemonNumber(pokemon.url)
         val url = getPokemonImageUrl(number)
         PokemonDBEntity(
             id = number,
             image = url,
-            name = pokemon.name
+            name = pokemon.name,
         )
     }
 }

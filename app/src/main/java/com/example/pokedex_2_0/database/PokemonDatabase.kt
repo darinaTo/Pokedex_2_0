@@ -10,7 +10,7 @@ import com.example.pokedex_2_0.database.entities.TypeEntity
 @Database(
     entities = [PokemonDBEntity::class, PokemonInfoDBEntity::class,
         StatEntityDB::class, TypeEntity::class],
-    version = 2, exportSchema = false
+    version = 1, exportSchema = false
 )
 abstract class PokemonDatabase : RoomDatabase() {
     abstract fun pokemonDao(): PokemonDao
