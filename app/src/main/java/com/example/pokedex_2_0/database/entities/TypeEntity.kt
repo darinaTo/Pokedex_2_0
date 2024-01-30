@@ -16,5 +16,5 @@ data class TypeEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id") val id: Int = 0,
     @ColumnInfo(name = "name") val name : String,
-    val pokemonId: Int
+  @ColumnInfo(name = "pokemonId")  val pokemonId: Int
 )

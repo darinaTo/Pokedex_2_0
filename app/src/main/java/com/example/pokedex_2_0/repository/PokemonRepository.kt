@@ -25,7 +25,6 @@ class PokemonRepository @Inject constructor(
 ) {
     val pokemonList: Flow<List<PokemonUiEntity>> = dao.getListPokemon().map { it.mapToUiEntity() }
     val pokemonInfoFlow: Flow<PokemonUiInfoEntity> = dao.getPokemonInfo().map { it.mapToUiEntity() }
-    val url = "?limit=10&offset=0"
 
     suspend fun getPokemonList(offset: Int, limit: Int) {
         withContext(Dispatchers.IO) {

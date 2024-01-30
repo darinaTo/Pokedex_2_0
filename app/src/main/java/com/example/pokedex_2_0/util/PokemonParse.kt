@@ -55,7 +55,7 @@ fun parseTypeToColor(type: Type): Color {
 }
 
 fun parseStatToColor(stat: Stat): Color {
-    return when (stat.statInfo.name.toLowerCase()) {
+    return when (stat.statInfo.name.lowercase(Locale.ROOT)) {
         "hp" -> HPColor
         "attack" -> AtkColor
         "defense" -> DefColor
@@ -67,7 +67,7 @@ fun parseStatToColor(stat: Stat): Color {
 }
 
 fun parseStatToAbbr(stat: Stat): String {
-    return when (stat.statInfo.name.toLowerCase()) {
+    return when (stat.statInfo.name.lowercase(Locale.ROOT)) {
         "hp" -> "HP"
         "attack" -> "ATK"
         "defense" -> "DEF"
