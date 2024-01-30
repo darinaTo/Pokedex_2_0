@@ -5,11 +5,11 @@ import com.example.pokedex_2_0.data.models.PokemonUiInfoEntity
 import com.example.pokedex_2_0.data.models.request.PokemonApiResponse
 import com.example.pokedex_2_0.data.models.request.pokemondetail.PokemonInfoApiResponse
 import com.example.pokedex_2_0.database.PokemonDao
-import com.example.pokedex_2_0.database.entities.StatEntity
-import com.example.pokedex_2_0.database.entities.TypeEntity
 import com.example.pokedex_2_0.network.PokeApi
+import com.example.pokedex_2_0.network.mapStatToDatabaseModel
 import com.example.pokedex_2_0.network.mapToDatabaseModel
 import com.example.pokedex_2_0.network.mapToUiEntity
+import com.example.pokedex_2_0.network.mapTypeToDatabaseModel
 import com.example.pokedex_2_0.util.Resource
 import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +24,7 @@ class PokemonRepository @Inject constructor(
     private val api: PokeApi
 ) {
     val pokemonList: Flow<List<PokemonUiEntity>> = dao.getListPokemon().map { it.mapToUiEntity() }
-    val pokemonInfoFlow : Flow<PokemonUiInfoEntity> = dao.getPokemonInfo().map { it.mapToUiEntity() }
+    val pokemonInfoFlow: Flow<PokemonUiInfoEntity> = dao.getPokemonInfo().map { it.mapToUiEntity() }
 
     //TODO: It is better to rename as main purpose is getting data
     suspend fun savePokemonList(limit: Int, offset: Int) {
@@ -53,32 +53,10 @@ class PokemonRepository @Inject constructor(
     }
 
     private suspend fun savePokemonInfo(pokemonInfoApiResponse: PokemonInfoApiResponse) {
-
-        // TODO: add related mappers to DTO file
-        //  PokemonInfoApiResponse to PokemonInfoDBEntity
-        //  pokemonInfoApiResponse to TypeEntity
-        //  pokemonInfoApiResponse to StatEntity
         val pokemonEntity =  pokemonInfoApiResponse.mapToDatabaseModel()
-        /*PokemonInfoDBEntity(
-            id = pokemonInfoApiResponse.id,
-            name = pokemonInfoApiResponse.name,
-            height = pokemonInfoApiResponse.height,
-            weight = pokemonInfoApiResponse.weight,
-        )*/
-
-        val typeEntities = pokemonInfoApiResponse.types.map { type ->
-            TypeEntity(
-                name = type.type.name,
-                pokemonId = pokemonEntity.id
-            )
-        }
-        val statEntities = pokemonInfoApiResponse.stats.map { stat ->
-            StatEntity(
-                baseStat = stat.base_stat,
-                name = stat.statInfo.name,
-                pokemonId = pokemonEntity.id
-            )
-        }
+        val pokemonId = pokemonEntity.id
+        val typeEntities = pokemonInfoApiResponse.types.mapTypeToDatabaseModel(pokemonId)
+        val statEntities = pokemonInfoApiResponse.stats.mapStatToDatabaseModel(pokemonId)
         dao.insertPokemonInfo(pokemonEntity)
         dao.insertTypes(typeEntities)
         dao.insertStats(statEntities)

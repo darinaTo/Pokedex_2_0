@@ -12,9 +12,7 @@ import javax.inject.Inject
 class PokemonDetailViewModel @Inject constructor(private val repository: PokemonRepository) :
     ViewModel() {
 
-//    suspend fun getPokemonInfo(pokemonName: String): Resource<PokemonInfoApiResponse> {
-//        return repository.getPokemonInfoFromApi(pokemonName)
-//    }
+
 
     //TODO: Please add uiState as in PokemonViewModel example and observe it on View side.
     // You may use collectAsStateWithLifecycle() as you use it already in PokemonListScreen

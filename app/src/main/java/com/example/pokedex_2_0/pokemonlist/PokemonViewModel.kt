@@ -14,6 +14,7 @@ import com.example.pokedex_2_0.data.models.PokemonUiEntity
 import com.example.pokedex_2_0.repository.PokemonRepository
 import com.example.pokedex_2_0.util.Constants.PAGE_SIZE
 import com.example.pokedex_2_0.util.PokemonApiStatus
+import com.example.pokedex_2_0.util.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -101,6 +102,3 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
 }
 
 // TODO: add rest required fields and move to separate file
-data class UiState(
-    val pokemons: List<PokemonUiEntity> = emptyList()
-)

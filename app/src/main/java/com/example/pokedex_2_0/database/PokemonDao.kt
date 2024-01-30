@@ -7,7 +7,7 @@ import androidx.room.Query
 import com.example.pokedex_2_0.database.entities.PokemonDBEntity
 import com.example.pokedex_2_0.database.entities.PokemonInfoDBEntity
 import com.example.pokedex_2_0.database.entities.PokemonInfoFullInfo
-import com.example.pokedex_2_0.database.entities.StatEntity
+import com.example.pokedex_2_0.database.entities.StatEntityDB
 import com.example.pokedex_2_0.database.entities.TypeEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -30,5 +30,5 @@ interface PokemonDao {
     suspend fun insertTypes(typesList: List<TypeEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertStats(statsList: List<StatEntity>)
+    suspend fun insertStats(statsList: List<StatEntityDB>)
 }

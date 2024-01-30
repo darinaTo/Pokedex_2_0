@@ -12,7 +12,7 @@ import androidx.room.PrimaryKey
         childColumns = ["pokemonId"],
         onDelete = ForeignKey.CASCADE
     )])
-data class StatEntity (
+data class StatEntityDB (
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id") val id : Int = 0,
     @ColumnInfo(name = "base_stat") val baseStat : Int,

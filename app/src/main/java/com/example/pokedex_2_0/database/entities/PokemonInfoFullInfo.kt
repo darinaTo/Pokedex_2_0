@@ -6,7 +6,7 @@ import androidx.room.Relation
 data class PokemonInfoFullInfo(
     @Embedded val pokemonEntity : PokemonInfoDBEntity,
     @Relation(parentColumn = "id", entityColumn = "pokemonId")
-    val statEntities: List<StatEntity>,
+    val statEntities: List<StatEntityDB>,
     @Relation(parentColumn = "id", entityColumn = "pokemonId")
     val typeEntities: List<TypeEntity>,
 )
