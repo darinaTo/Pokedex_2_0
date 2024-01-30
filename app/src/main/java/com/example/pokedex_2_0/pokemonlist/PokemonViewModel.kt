@@ -54,7 +54,7 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
     init {
         viewModelScope.launch(Dispatchers.IO) {
             // TODO: PAGE_SIZE could be as default parameter
-            pokemonRepository.savePokemonList(PAGE_SIZE, currentPage * PAGE_SIZE) // TODO: better to rename to getPokemonList()
+            pokemonRepository.getPokemonList(PAGE_SIZE, currentPage * PAGE_SIZE) // TODO: better to rename to getPokemonList()
             refreshPokemonList() // TODO: this line is redundant in case of using pokemonFlow
             pokemonFlow.launchIn(viewModelScope) // todo required for correct work
         }
@@ -77,7 +77,7 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
             _status.postValue(PokemonApiStatus.LOADING)
 
             try {
-                pokemonRepository.savePokemonList(PAGE_SIZE, currentPage * PAGE_SIZE)
+                pokemonRepository.getPokemonList(PAGE_SIZE, currentPage * PAGE_SIZE)
                 currentPage++
                 refreshPokemonList()
                 _status.value = PokemonApiStatus.DONE

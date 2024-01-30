@@ -26,32 +26,35 @@ class PokemonRepository @Inject constructor(
     val pokemonList: Flow<List<PokemonUiEntity>> = dao.getListPokemon().map { it.mapToUiEntity() }
     val pokemonInfoFlow: Flow<PokemonUiInfoEntity> = dao.getPokemonInfo().map { it.mapToUiEntity() }
 
-    //TODO: It is better to rename as main purpose is getting data
-    suspend fun savePokemonList(limit: Int, offset: Int) {
-        val pokemonFromApi = getPokemonList(limit, offset)
-        val pokemonData = pokemonFromApi.data
-        if (pokemonFromApi is Resource.Success && pokemonData != null) {
-            val databaseEntities = pokemonData.pokemonApiEntities.mapToDatabaseModel()
-            dao.insertAll(databaseEntities)
-        } else {
-            // TODO: handle Error or null case. f.e. return data from db
+    suspend fun getPokemonList(limit: Int, offset: Int) {
+        withContext(Dispatchers.IO) {
+            val pokemonFromApi = getPokemonListApi(limit, offset)
+            val pokemonData = pokemonFromApi.data
+            if (pokemonFromApi is Resource.Success && pokemonData != null) {
+              savePokemonList(pokemonData)
+            } else {
+                throw RuntimeException("Can't get pokemon list, api status: ${pokemonFromApi.message}")
+            }
         }
     }
 
     //create separate interface for repository todo you may do it later on the final stage
     suspend fun getPokemonInfo(name: String) {
         withContext(Dispatchers.IO) {
-            // TODO: Later this part may be optimized
             val pokemonInfo = getPokemonInfoFromApi(name)
             val pokemonData = pokemonInfo.data
             if (pokemonInfo is Resource.Success && pokemonData != null) {
                 savePokemonInfo(pokemonData)
             } else {
-                // TODO: Handle error
+             throw RuntimeException("Can't get the pokemon info, api status: ${pokemonInfo.message}")
             }
         }
     }
 
+    private suspend fun savePokemonList(pokemonList : PokemonApiResponse) {
+        val databaseEntities = pokemonList.pokemonApiEntities.mapToDatabaseModel()
+        dao.insertAll(databaseEntities)
+    }
     private suspend fun savePokemonInfo(pokemonInfoApiResponse: PokemonInfoApiResponse) {
         val pokemonEntity =  pokemonInfoApiResponse.mapToDatabaseModel()
         val pokemonId = pokemonEntity.id
@@ -66,17 +69,17 @@ class PokemonRepository @Inject constructor(
         val response = try {
             api.getPokemonInfo(name)
         } catch (e: Exception) {
-            return Resource.Error("An unknown error occurred.")
+            return Resource.Error("An unknown error occurred, exception: ${e.message}")
         }
         return Resource.Success(response)
     }
 
     //changed Resource to Result from kt todo this is not obligatory some sort of box solution
-    private suspend fun getPokemonList(limit: Int, offset: Int): Resource<PokemonApiResponse> {
+    private suspend fun getPokemonListApi(limit: Int, offset: Int): Resource<PokemonApiResponse> {
         val response = try {
             api.getPokemonList(limit, offset)
         } catch (e: Exception) {
-            return Resource.Error("An unknown error occurred.")
+            return Resource.Error("An unknown error occurred, exception: ${e.message}")
         }
         return Resource.Success(response)
     }
