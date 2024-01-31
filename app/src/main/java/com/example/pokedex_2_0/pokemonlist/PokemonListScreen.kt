@@ -56,9 +56,9 @@ fun PokemonList(
     navController: NavController,
     viewModel: PokemonViewModel = hiltViewModel()
 ) {
-    val pokemonList by viewModel.uiState.collectAsStateWithLifecycle() // TODO: collectAsStateWithLifecycle() NICE!
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle() // TODO: collectAsStateWithLifecycle() NICE!
 
-    PokemonGrid(entriesList = pokemonList, navController = navController)
+    PokemonGrid(entriesList = uiState.pokemons, navController = navController)
 }
 
 @Composable
