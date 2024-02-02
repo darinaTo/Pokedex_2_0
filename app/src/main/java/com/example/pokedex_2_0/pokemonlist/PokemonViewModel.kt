@@ -11,7 +11,7 @@ import androidx.palette.graphics.Palette
 import com.example.pokedex_2_0.repository.PokemonRepository
 import com.example.pokedex_2_0.util.Constants.OFFSET
 import com.example.pokedex_2_0.util.PokemonApiStatus
-import com.example.pokedex_2_0.util.UiState
+import com.example.pokedex_2_0.util.UiStateList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,8 +29,8 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
 
     private var currentPage = 0
 
-    private val _uiState = MutableStateFlow(UiState())
-    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(UiStateList())
+    val uiState: StateFlow<UiStateList> = _uiState.asStateFlow()
 
     private val pokemonFlow = pokemonRepository.pokemonList.onEach { pokemons ->
         _uiState.update { it.copy(pokemons = pokemons) }

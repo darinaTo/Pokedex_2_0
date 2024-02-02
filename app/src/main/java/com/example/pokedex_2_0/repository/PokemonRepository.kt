@@ -24,7 +24,7 @@ class PokemonRepository @Inject constructor(
     private val api: PokeApi
 ) {
     val pokemonList: Flow<List<PokemonUiEntity>> = dao.getListPokemon().map { it.mapToUiEntity() }
-    val pokemonInfoFlow: Flow<PokemonUiInfoEntity> = dao.getPokemonInfo().map { it.mapToUiEntity() }
+    val pokemonInfo: Flow<PokemonUiInfoEntity> = dao.getPokemonInfo().map { it.mapToUiEntity() }
 
     suspend fun getPokemonList(offset: Int) {
         withContext(Dispatchers.IO) {
@@ -44,7 +44,7 @@ class PokemonRepository @Inject constructor(
             val pokemonInfo = getPokemonInfoFromApi(name)
             val pokemonData = pokemonInfo.data
             if (pokemonInfo is Resource.Success && pokemonData != null) {
-                savePokemonInfo(pokemonData)
+                   savePokemonInfo(pokemonData)
             } else {
              throw RuntimeException("Can't get the pokemon info, api status: ${pokemonInfo.message}")
             }
@@ -60,9 +60,11 @@ class PokemonRepository @Inject constructor(
         val pokemonId = pokemonEntity.id
         val typeEntities = pokemonInfoApiResponse.types.mapTypeToDatabaseModel(pokemonId)
         val statEntities = pokemonInfoApiResponse.stats.mapStatToDatabaseModel(pokemonId)
-        dao.insertPokemonInfo(pokemonEntity)
-        dao.insertTypes(typeEntities)
-        dao.insertStats(statEntities)
+        withContext(Dispatchers.IO) {
+            dao.insertPokemonInfo(pokemonEntity)
+            dao.insertTypes(typeEntities)
+            dao.insertStats(statEntities)
+        }
     }
 
     private suspend fun getPokemonInfoFromApi(name: String): Resource<PokemonInfoApiResponse> {

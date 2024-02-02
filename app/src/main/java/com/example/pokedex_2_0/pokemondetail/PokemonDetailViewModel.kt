@@ -1,28 +1,47 @@
 package com.example.pokedex_2_0.pokemondetail
 
+import android.util.Log
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.example.pokedex_2_0.data.models.PokemonUiInfoEntity
+import androidx.lifecycle.viewModelScope
 import com.example.pokedex_2_0.repository.PokemonRepository
 import com.example.pokedex_2_0.util.Resource
+import com.example.pokedex_2_0.util.UiStateDetail
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PokemonDetailViewModel @Inject constructor(private val repository: PokemonRepository) :
-    ViewModel() {
+class PokemonDetailViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    private val pokemonRepository: PokemonRepository
+) : ViewModel() {
 
 
+    private val _uiState = MutableStateFlow(UiStateDetail())
+    val uiState: StateFlow<UiStateDetail> = _uiState.asStateFlow()
 
-    //TODO: Please add uiState as in PokemonViewModel example and observe it on View side.
-    // You may use collectAsStateWithLifecycle() as you use it already in PokemonListScreen
-    // DO NOT FORGET add .launchIn(viewModelScope) for every flow which would be used
+    private val pokemonFlow = pokemonRepository.pokemonInfo.onEach { pokemons ->
+        Log.d("mytag", " foreach: ${pokemons.name}")
+        _uiState.update { it.copy(pokemonInfo = Resource.Success(data = pokemons)) }
+    }
 
-    suspend fun getPokemonInfo(pokemonName: String): Resource<PokemonUiInfoEntity> {
-        repository.getPokemonInfo(pokemonName)
-        //TODO: STUB !!! Please rewrite to uiState observing using onEach{}
-        // Due to .first() using there will be displayed only first pokemon from db
-        val res = repository.pokemonInfoFlow.first()
-        return Resource.Success(data = res)
+    init {
+        val pokemonName =  savedStateHandle.get<String>("pokemonName")
+        Log.d("mytag", "init ${pokemonName!!}")
+        getPokemonInfo(pokemonName)
+        pokemonFlow.launchIn(viewModelScope)
+    }
+
+    private fun getPokemonInfo(pokemonName: String) {
+        viewModelScope.launch {
+            pokemonRepository.getPokemonInfo(pokemonName)
+        }
     }
 }

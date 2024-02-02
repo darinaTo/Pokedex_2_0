@@ -34,7 +34,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -48,6 +47,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.pokedex_2_0.data.models.PokemonUiInfoEntity
@@ -70,9 +70,10 @@ fun PokemonDetailScreen(
     navController: NavController,
     viewModel: PokemonDetailViewModel = hiltViewModel()
 ) {
-    val pokemonInfoApiEntityInfo = produceState<Resource<PokemonUiInfoEntity>>(initialValue = Resource.Loading()) {
-        value = viewModel.getPokemonInfo(pokemonName)
-    }.value
+    //viewModel.getPokemonInfo(pokemonName = pokemonName)
+
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val pokemonInfoApiEntityInfo = uiState.pokemonInfo
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -104,7 +105,8 @@ fun PokemonDetailSection(
         )
         PokemonTypeSection(types = pokemonInfoApiEntityInfo.types)
         PokemonDetailDataSection(
-            pokemonWeight = pokemonInfoApiEntityInfo.weight, pokemonHeight = pokemonInfoApiEntityInfo.height
+            pokemonWeight = pokemonInfoApiEntityInfo.weight,
+            pokemonHeight = pokemonInfoApiEntityInfo.height
         )
         Spacer(modifier = Modifier.height(20.dp))
         PokemonBaseStats(pokemonInfoApiEntityInfo = pokemonInfoApiEntityInfo)
