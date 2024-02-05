@@ -41,6 +41,7 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -50,6 +51,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.example.pokedex_2_0.R
 import com.example.pokedex_2_0.data.models.PokemonUiInfoEntity
 import com.example.pokedex_2_0.data.models.request.pokemondetail.Type
 import com.example.pokedex_2_0.ui.theme.Black
@@ -151,8 +153,8 @@ fun PokemonDetailDataSection(
     ) {
         PokemonDetailDataItem(
             dataValue = pokemonWeightInKg,
-            dataUnit = "KG",
-            dataCharacteristic = "Weight",
+            dataUnit = stringResource(R.string.kg),
+            dataCharacteristic = stringResource(R.string.weight),
             modifier = Modifier.weight(1f)
         )
 
@@ -163,8 +165,8 @@ fun PokemonDetailDataSection(
 
         PokemonDetailDataItem(
             dataValue = pokemonHeightInM,
-            dataUnit = "M",
-            dataCharacteristic = "Height",
+            dataUnit = stringResource(R.string.m),
+            dataCharacteristic = stringResource(R.string.height),
             modifier = Modifier.weight(1f)
         )
     }
@@ -310,7 +312,7 @@ fun PokemonTopDetail(
 
             )
             Text(
-                text = "Pokedex",
+                text = stringResource(R.string.pokedex),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
@@ -432,7 +434,7 @@ fun PokemonBaseStats(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Base Stats",
+            text = stringResource(R.string.base_stats),
             color = Color.White,
             fontSize = 25.sp,
             fontWeight = FontWeight.Bold,
