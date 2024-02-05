@@ -16,8 +16,8 @@ interface PokemonDao {
     @Query("select * from pokemon")
     fun getListPokemon(): Flow<List<PokemonDBEntity>>
 
-    @Query("select * from pokemon_info")
-    fun getPokemonInfo(): Flow<PokemonInfoFullInfo>
+    @Query("select * from pokemon_info where name =:name")
+    fun getPokemonInfo(name : String): Flow<PokemonInfoFullInfo>
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

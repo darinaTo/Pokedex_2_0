@@ -1,6 +1,5 @@
 package com.example.pokedex_2_0.pokemondetail
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -27,16 +26,14 @@ class PokemonDetailViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(UiStateDetail())
     val uiState: StateFlow<UiStateDetail> = _uiState.asStateFlow()
 
-    private val pokemonFlow = pokemonRepository.pokemonInfo.onEach { pokemons ->
-        Log.d("mytag", " foreach: ${pokemons.name}")
+
+    private val pokemonName = requireNotNull(savedStateHandle.get<String>("pokemonName"))
+    private val pokemonFlow = pokemonRepository.getPokemonInfoByName(pokemonName).onEach { pokemons ->
         _uiState.update { it.copy(pokemonInfo = Resource.Success(data = pokemons)) }
     }
-
     init {
-        val pokemonName =  savedStateHandle.get<String>("pokemonName")
-        Log.d("mytag", "init ${pokemonName!!}")
-        getPokemonInfo(pokemonName)
-        pokemonFlow.launchIn(viewModelScope)
+            getPokemonInfo(pokemonName)
+            pokemonFlow.launchIn(viewModelScope)
     }
 
     private fun getPokemonInfo(pokemonName: String) {
