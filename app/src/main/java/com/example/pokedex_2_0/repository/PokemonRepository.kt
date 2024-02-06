@@ -14,6 +14,7 @@ import com.example.pokedex_2_0.util.Resource
 import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -38,7 +39,7 @@ class PokemonRepository @Inject constructor(
     }
 
      fun getPokemonInfoByName(name: String): Flow<PokemonUiInfoEntity> {
-        return dao.getPokemonInfo(name).map { it.mapToUiEntity() }
+        return dao.getPokemonInfo(name).distinctUntilChanged().map { it.mapToUiEntity() }
     }
 
     //create separate interface for repository todo you may do it later on the final stage
