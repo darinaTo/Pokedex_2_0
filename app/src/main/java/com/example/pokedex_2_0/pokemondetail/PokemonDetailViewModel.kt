@@ -1,5 +1,6 @@
 package com.example.pokedex_2_0.pokemondetail
 
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -24,10 +25,15 @@ class PokemonDetailViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(UiStateDetail())
     val uiState: StateFlow<UiStateDetail> = _uiState.asStateFlow()
     private val pokemonName: String
-
+    private val pokemonImg: String
+    private val dominantColor: Int
 
     init {
         pokemonName = requireNotNull(savedStateHandle.get<String>("pokemonName"))
+        pokemonImg = requireNotNull(savedStateHandle.get<String>("pokemonImg"))
+        dominantColor = requireNotNull(savedStateHandle.get<Int>("pokemonColor"))
+        _uiState.update { it.copy(pokemonImg = pokemonImg) }
+        _uiState.update { it.copy(dominantColor = Color(dominantColor)) }
         viewModelScope.launch {
             getPokemonInfo(pokemonName)
             observe()
@@ -39,7 +45,7 @@ class PokemonDetailViewModel @Inject constructor(
     }
 
     private suspend fun observe() {
-        pokemonRepository.getPokemonInfoByName(pokemonName).collect{ pokemons->
+        pokemonRepository.getPokemonInfoByName(pokemonName).collect { pokemons ->
             _uiState.update { it.copy(pokemonInfo = Resource.Success(data = pokemons)) }
         }
     }

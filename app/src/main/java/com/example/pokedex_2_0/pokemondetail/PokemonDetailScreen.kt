@@ -56,6 +56,7 @@ import com.example.pokedex_2_0.data.models.PokemonUiInfoEntity
 import com.example.pokedex_2_0.data.models.request.pokemondetail.Type
 import com.example.pokedex_2_0.ui.theme.Black
 import com.example.pokedex_2_0.util.Resource
+import com.example.pokedex_2_0.util.UiStateDetail
 import com.example.pokedex_2_0.util.parseStatToAbbr
 import com.example.pokedex_2_0.util.parseStatToColor
 import com.example.pokedex_2_0.util.parseTypeToColor
@@ -72,10 +73,7 @@ fun PokemonDetailScreen(
     navController: NavController,
     viewModel: PokemonDetailViewModel = hiltViewModel()
 ) {
-    //viewModel.getPokemonInfo(pokemonName = pokemonName)
-
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val pokemonInfoApiEntityInfo = uiState.pokemonInfo
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -83,9 +81,7 @@ fun PokemonDetailScreen(
     ) {
         PokemonBase(
             navController = navController,
-            pokemonInfoApiEntityInfo = pokemonInfoApiEntityInfo,
-            pokemonImg = pokemonImg,
-            dominantColor = dominantColor,
+            uiState = uiState,
             modifier = Modifier.align(Alignment.Center)
         )
 
@@ -94,13 +90,13 @@ fun PokemonDetailScreen(
 
 @Composable
 fun PokemonDetailSection(
-    pokemonInfoApiEntityInfo: PokemonUiInfoEntity?, modifier: Modifier = Modifier
+    pokemonInfoApiEntityInfo: PokemonUiInfoEntity, modifier: Modifier = Modifier
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier.fillMaxSize()
     ) {
         Text(
-            text = pokemonInfoApiEntityInfo!!.name,
+            text = pokemonInfoApiEntityInfo.name,
             fontSize = 30.sp,
             fontWeight = FontWeight.Bold,
             color = Color.White,
@@ -199,39 +195,27 @@ fun PokemonTypeSection(types: List<Type>) {
 
         }
     }
-
-    /*  LazyRow(
-          verticalAlignment = Alignment.CenterVertically,
-          modifier = Modifier
-              .padding(16.dp)
-      ) {
-          items(types) { type ->
-
-          }
-      }*/
 }
 
 @Composable
 fun PokemonBase(
     navController: NavController,
-    pokemonInfoApiEntityInfo: Resource<PokemonUiInfoEntity>,
-    pokemonImg: String,
-    dominantColor: Color,
+    uiState : UiStateDetail,
     modifier: Modifier = Modifier,
 ) {
-    when (pokemonInfoApiEntityInfo) {
+    when (uiState.pokemonInfo) {
         is Resource.Success -> {
             Column {
                 PokemonTop(
                     navController = navController,
-                    pokemonImg = pokemonImg,
-                    dominantColor = dominantColor,
-                    pokemonInfoApiEntityInfo = pokemonInfoApiEntityInfo.data!!
+                    pokemonImg = uiState.pokemonImg,
+                    dominantColor = uiState.dominantColor,
+                    pokemonInfoApiEntityInfo = uiState.pokemonInfo.data!!
                 )
                 Spacer(modifier = Modifier.height(20.dp))
 
                 PokemonDetailSection(
-                    pokemonInfoApiEntityInfo = pokemonInfoApiEntityInfo.data,
+                    pokemonInfoApiEntityInfo = uiState.pokemonInfo.data,
                 )
 
             }
@@ -239,7 +223,7 @@ fun PokemonBase(
 
         is Resource.Error -> {
             Text(
-                text = pokemonInfoApiEntityInfo.message!!, color = Color.Red, modifier = modifier
+                text = uiState.pokemonInfo.message!!, color = Color.Red, modifier = modifier
             )
         }
 
