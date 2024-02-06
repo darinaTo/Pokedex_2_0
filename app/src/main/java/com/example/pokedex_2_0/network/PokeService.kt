@@ -7,9 +7,6 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-//https://pokeapi.co/api/v2/pokemon?limit=10&offset=0
-
-// TODO: it is better to rename file to PokeApi to avoid misleading. You may use rc -> refactoring -> rename in files tree
 interface PokeApi {
 
     @GET("pokemon")

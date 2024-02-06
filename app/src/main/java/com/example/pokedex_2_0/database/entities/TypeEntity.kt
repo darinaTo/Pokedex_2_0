@@ -4,8 +4,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.example.pokedex_2_0.util.Constants.POKEMON_TYPE_TABLE
 
-@Entity(tableName = "type_table",
+@Entity(tableName = POKEMON_TYPE_TABLE,
     foreignKeys = [ForeignKey(
         entity = PokemonInfoDBEntity::class,
         parentColumns = ["id"],

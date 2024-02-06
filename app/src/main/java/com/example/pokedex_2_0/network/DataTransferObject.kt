@@ -86,7 +86,7 @@ fun List<Stat>.mapStatToDatabaseModel(pokemonId : Int) : List<StatEntityDB> {
 private fun extractPokemonNumber(link: String): Int {
     val regex = Regex("/pokemon/(\\d+)/")
     val matchResult = regex.find(link)
-    return matchResult?.groupValues?.get(1)?.toIntOrNull() ?: -1 // TODO: check -1 case
+    return matchResult?.groupValues?.get(1)?.toIntOrNull() ?: -1
 }
 
 private fun getPokemonImageUrl(number: Int): String {

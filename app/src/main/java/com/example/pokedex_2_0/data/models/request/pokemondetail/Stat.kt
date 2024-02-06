@@ -4,7 +4,7 @@ import androidx.room.Embedded
 import com.squareup.moshi.Json
 
 data class Stat(
-    @Json(name = "base_stat") val base_stat: Int, //todo now this field may be renamed using camelCase :)
+    @Json(name = "base_stat") val base_stat: Int,
     @Embedded
-    @Json(name = "stat") val statInfo: StatX //todo StatX is not very clear naming. Please consider renaming
+    @Json(name = "stat") val statInfo: StatX
 )
