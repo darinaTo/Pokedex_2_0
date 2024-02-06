@@ -93,7 +93,7 @@ fun PokemonDetailSection(
     pokemonInfoApiEntityInfo: PokemonUiInfoEntity, modifier: Modifier = Modifier
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier.fillMaxSize()
+        horizontalAlignment = CenterHorizontally, modifier = modifier.fillMaxSize()
     ) {
         Text(
             text = pokemonInfoApiEntityInfo.name,
@@ -117,7 +117,7 @@ fun PokemonDetailDataItem(
 ) {
 
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = modifier
     ) {
