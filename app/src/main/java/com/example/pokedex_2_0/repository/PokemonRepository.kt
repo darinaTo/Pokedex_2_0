@@ -24,7 +24,6 @@ class PokemonRepository @Inject constructor(
     private val api: PokeApi
 ) {
     val pokemonList: Flow<List<PokemonUiEntity>> = dao.getListPokemon().map { it.mapToUiEntity() }
-   // val pokemonInfo: Flow<PokemonUiInfoEntity> = dao.getPokemonInfo("bulbasaur").map { it.mapToUiEntity() }
 
     suspend fun getPokemonList(offset: Int) {
         withContext(Dispatchers.IO) {
@@ -44,7 +43,6 @@ class PokemonRepository @Inject constructor(
 
     //create separate interface for repository todo you may do it later on the final stage
     suspend fun getPokemonInfo(name: String) {
-        withContext(Dispatchers.IO) {
             val pokemonInfo = getPokemonInfoFromApi(name)
             val pokemonData = pokemonInfo.data
             if (pokemonInfo is Resource.Success && pokemonData != null) {
@@ -52,7 +50,6 @@ class PokemonRepository @Inject constructor(
             } else {
                 throw RuntimeException("Can't get the pokemon info, api status: ${pokemonInfo.message}")
             }
-        }
     }
 
     private suspend fun savePokemonList(pokemonList: PokemonApiResponse) {

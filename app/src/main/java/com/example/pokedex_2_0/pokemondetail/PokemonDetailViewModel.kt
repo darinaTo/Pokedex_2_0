@@ -25,20 +25,24 @@ class PokemonDetailViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(UiStateDetail())
     val uiState: StateFlow<UiStateDetail> = _uiState.asStateFlow()
+    private val pokemonName: String
 
 
-    private val pokemonName = requireNotNull(savedStateHandle.get<String>("pokemonName"))
-    private val pokemonFlow = pokemonRepository.getPokemonInfoByName(pokemonName).onEach { pokemons ->
-        _uiState.update { it.copy(pokemonInfo = Resource.Success(data = pokemons)) }
-    }
     init {
+        pokemonName = requireNotNull(savedStateHandle.get<String>("pokemonName"))
+        viewModelScope.launch {
             getPokemonInfo(pokemonName)
-            pokemonFlow.launchIn(viewModelScope)
+            observe()
+        }
     }
 
-    private fun getPokemonInfo(pokemonName: String) {
-        viewModelScope.launch {
-            pokemonRepository.getPokemonInfo(pokemonName)
-        }
+    private suspend fun getPokemonInfo(pokemonName: String) {
+        pokemonRepository.getPokemonInfo(pokemonName)
+    }
+
+    private fun observe() {
+        pokemonRepository.getPokemonInfoByName(pokemonName).onEach { pokemons ->
+            _uiState.update { it.copy(pokemonInfo = Resource.Success(data = pokemons)) }
+        }.launchIn(viewModelScope)
     }
 }
