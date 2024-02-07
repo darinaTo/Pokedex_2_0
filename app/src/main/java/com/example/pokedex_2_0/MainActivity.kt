@@ -3,18 +3,16 @@ package com.example.pokedex_2_0
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.remember
-import androidx.compose.ui.graphics.Color
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.example.pokedex_2_0.pokemondetail.PokemonDetailScreen
 import com.example.pokedex_2_0.pokemonlist.PokemonListScreen
 import com.example.pokedex_2_0.ui.theme.Pokedex_2_0Theme
+import com.example.pokedex_2_0.util.Constants.POKEMON_DETAIL_ROUTE
+import com.example.pokedex_2_0.util.Constants.POKEMON_LIST_ROUTE
+import com.example.pokedex_2_0.util.Constants.pokemonDetailArguments
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.Locale
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -23,38 +21,16 @@ class MainActivity : ComponentActivity() {
         setContent {
             Pokedex_2_0Theme {
                 val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = "pokemon_list_screen") {
-                    composable("pokemon_list_screen") {
+                NavHost(navController = navController, startDestination = POKEMON_LIST_ROUTE) {
+                    composable(POKEMON_LIST_ROUTE) {
                         PokemonListScreen(navController = navController)
                     }
-                    composable("pokemon_detail_screen/{pokemonColor}/{pokemonName}/{pokemonImg}",
-                        arguments = listOf(
-                            navArgument("pokemonColor") {
-                                type = NavType.IntType
-                            },
-                            navArgument("pokemonName") {
-                                type = NavType.StringType
-                            },
-                            navArgument("pokemonImg") {
-                                type = NavType.StringType
-                            }
-                        )
+                    composable(
+                        "${POKEMON_DETAIL_ROUTE}/{pokemonColor}/{pokemonName}/{pokemonImg}",
+                        arguments = pokemonDetailArguments
                     ) {
-                        val dominantColor = remember {
-                            val color = it.arguments?.getInt("pokemonColor")
-                            color?.let { Color(it) } ?: Color.White
-                        }
-                        val pokemonName = remember {
-                            it.arguments?.getString("pokemonName")
-                        }
-                        val pokemonImg = remember {
-                            it.arguments?.getString("pokemonImg")
-                        }
                         PokemonDetailScreen(
-                            dominantColor = dominantColor,
-                            pokemonName = pokemonName?.lowercase(Locale.ROOT) ?: "",
-                            pokemonImg = pokemonImg!!,
-                            navController = navController)
+                            onArrowBackClick = { navController.popBackStack() })
                     }
 
                 }

@@ -28,6 +28,7 @@ class PokemonRepository @Inject constructor(
         withContext(Dispatchers.IO) {
             val pokemonFromApi = getPokemonListApi(offset)
             val pokemonData = pokemonFromApi.data
+            //TODO runCatching get status Resources with
             if (pokemonFromApi is Resource.Success && pokemonData != null) {
                 savePokemonList(pokemonData)
             } else {

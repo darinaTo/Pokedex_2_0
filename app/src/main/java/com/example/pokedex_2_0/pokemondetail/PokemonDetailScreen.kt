@@ -49,7 +49,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.pokedex_2_0.R
 import com.example.pokedex_2_0.data.models.PokemonUiInfoEntity
@@ -65,13 +64,10 @@ import kotlin.math.round
 
 @Composable
 fun PokemonDetailScreen(
-    dominantColor: Color,
-    pokemonName: String,
-    pokemonImg: String,
-    //todo It is better to pass lambdas instead of navController
-    // https://developer.android.com/codelabs/jetpack-compose-navigation#4
-    navController: NavController,
-    viewModel: PokemonDetailViewModel = hiltViewModel()
+//TODO workManager : add maybe notification add calculate dominant color -> на головній сторонці
+    //TODO useCase
+    viewModel: PokemonDetailViewModel = hiltViewModel(),
+    onArrowBackClick: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     Box(
@@ -80,7 +76,7 @@ fun PokemonDetailScreen(
             .background(Black),
     ) {
         PokemonBase(
-            navController = navController,
+            onArrowBackClick = onArrowBackClick,
             uiState = uiState,
             modifier = Modifier.align(Alignment.Center)
         )
@@ -199,15 +195,17 @@ fun PokemonTypeSection(types: List<Type>) {
 
 @Composable
 fun PokemonBase(
-    navController: NavController,
-    uiState : UiStateDetail,
+    onArrowBackClick: () -> Unit,
+    uiState: UiStateDetail,
     modifier: Modifier = Modifier,
 ) {
+    //TODO create variable which will be safe result of API success
+
     when (uiState.pokemonInfo) {
         is Resource.Success -> {
             Column {
                 PokemonTop(
-                    navController = navController,
+                    onArrowBackClick = onArrowBackClick,
                     pokemonImg = uiState.pokemonImg,
                     dominantColor = uiState.dominantColor,
                     pokemonInfoApiEntityInfo = uiState.pokemonInfo.data!!
@@ -237,7 +235,7 @@ fun PokemonBase(
 
 @Composable
 fun PokemonTop(
-    navController: NavController,
+    onArrowBackClick: () -> Unit,
     pokemonImg: String,
     dominantColor: Color,
     pokemonInfoApiEntityInfo: PokemonUiInfoEntity,
@@ -256,9 +254,10 @@ fun PokemonTop(
     ) {
         Column {
             PokemonTopDetail(
-                navController = navController,
+                onArrowBackClick = onArrowBackClick,
                 pokemonId = pokemonInfoApiEntityInfo.id
             )
+            //todo cache in coil
             AsyncImage(
                 model = pokemonImg,
                 contentDescription = pokemonInfoApiEntityInfo.name,
@@ -274,7 +273,7 @@ fun PokemonTop(
 
 @Composable
 fun PokemonTopDetail(
-    navController: NavController,
+    onArrowBackClick: () -> Unit = {},
     pokemonId: Int
 ) {
     Box(
@@ -291,7 +290,7 @@ fun PokemonTopDetail(
                     .size(25.dp)
                     .align(Alignment.Top)
                     .clickable {
-                        navController.popBackStack()
+                        onArrowBackClick()
                     }
 
             )
@@ -327,7 +326,7 @@ fun PokemonStat(
     statValue: Int,
     maxValue: Int,
     statColor: Color,
-    animDuration: Int = 1000,
+    animDuration: Int = 500,
     animDelay: Int = 0,
 ) {
     var animationPlayed by remember {

@@ -57,7 +57,6 @@ fun PokemonList(
     viewModel: PokemonViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
     PokemonGrid(entriesList = uiState.pokemons, navController = navController)
 }
 
@@ -90,6 +89,7 @@ fun PokemonEntry(
                 )
             }) {
         Column {
+            //TODO Coil progress bar
             AsyncImage(
                 model = entry.imageUrl,
                 contentDescription = entry.pokemonName,
