@@ -10,7 +10,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.palette.graphics.Palette
 import com.example.pokedex_2_0.repository.PokemonRepository
 import com.example.pokedex_2_0.util.Constants.OFFSET
-import com.example.pokedex_2_0.util.PokemonApiStatus
+import com.example.pokedex_2_0.util.Status
 import com.example.pokedex_2_0.util.UiStateList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -57,14 +57,14 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
     fun getPokemon() {
         viewModelScope.launch(Dispatchers.IO) {
             Log.i("mytag", "getPokemon: VM ${Thread.currentThread().name}")
-            _uiState.update { it.copy(status = PokemonApiStatus.LOADING) }
+            _uiState.update { it.copy(status = Status.LOADING) }
 
             try {
                 currentPage += OFFSET
                 pokemonRepository.getPokemonList(currentPage)
-                _uiState.update { it.copy(status = PokemonApiStatus.DONE) }
+                _uiState.update { it.copy(status = Status.DONE) }
             } catch (e: Exception) {
-                _uiState.update { it.copy(status = PokemonApiStatus.ERROR) }
+                _uiState.update { it.copy(status = Status.ERROR) }
                 throw RuntimeException("Can't get pokemon from data base, $e")
             }
         }

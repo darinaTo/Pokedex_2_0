@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -37,6 +38,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.pokedex_2_0.data.models.PokemonUiEntity
 import com.example.pokedex_2_0.ui.theme.LightBlack
+import com.example.pokedex_2_0.util.Constants.POKEMON_DETAIL_ROUTE
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
@@ -80,7 +82,7 @@ fun PokemonEntry(
             .background(color)
             .clickable {
                 navController.navigate(
-                    "pokemon_detail_screen/${color.toArgb()}/${entry.pokemonName}/${
+                    "${POKEMON_DETAIL_ROUTE}/${color.toArgb()}/${entry.pokemonName}/${
                         encodedUrl.substring(
                             0,
                             encodedUrl.lastIndex
@@ -88,6 +90,10 @@ fun PokemonEntry(
                     }"
                 )
             }) {
+        var isLoading by remember { mutableStateOf(true) }
+        if (isLoading) {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        }
         Column {
             //TODO Coil progress bar
             AsyncImage(
@@ -98,6 +104,8 @@ fun PokemonEntry(
                     viewModel.calcColor(drawable) { dominantColor ->
                         color = dominantColor
                     }
+                    isLoading = false
+
                 },
                 modifier = Modifier
                     .size(120.dp)

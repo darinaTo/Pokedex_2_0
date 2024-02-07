@@ -37,6 +37,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -54,8 +55,7 @@ import com.example.pokedex_2_0.R
 import com.example.pokedex_2_0.data.models.PokemonUiInfoEntity
 import com.example.pokedex_2_0.data.models.request.pokemondetail.Type
 import com.example.pokedex_2_0.ui.theme.Black
-import com.example.pokedex_2_0.util.Resource
-import com.example.pokedex_2_0.util.UiStateDetail
+import com.example.pokedex_2_0.util.Status
 import com.example.pokedex_2_0.util.parseStatToAbbr
 import com.example.pokedex_2_0.util.parseStatToColor
 import com.example.pokedex_2_0.util.parseTypeToColor
@@ -70,17 +70,33 @@ fun PokemonDetailScreen(
     onArrowBackClick: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Black),
     ) {
-        PokemonBase(
-            onArrowBackClick = onArrowBackClick,
-            uiState = uiState,
-            modifier = Modifier.align(Alignment.Center)
-        )
+        if (uiState.status == Status.LOADING) {
+            CircularProgressIndicator(
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.align(Center)
+            )
+        } else {
+            Column {
+                PokemonTop(
+                    onArrowBackClick = onArrowBackClick,
+                    pokemonImg = uiState.pokemonImg,
+                    dominantColor = uiState.dominantColor,
+                    pokemonInfoApiEntityInfo = uiState.pokemonInfo
+                )
+                Spacer(modifier = Modifier.height(20.dp))
 
+                PokemonDetailSection(
+                    pokemonInfoApiEntityInfo = uiState.pokemonInfo,
+                )
+
+            }
+        }
     }
 }
 
@@ -192,47 +208,6 @@ fun PokemonTypeSection(types: List<Type>) {
         }
     }
 }
-
-@Composable
-fun PokemonBase(
-    onArrowBackClick: () -> Unit,
-    uiState: UiStateDetail,
-    modifier: Modifier = Modifier,
-) {
-    //TODO create variable which will be safe result of API success
-
-    when (uiState.pokemonInfo) {
-        is Resource.Success -> {
-            Column {
-                PokemonTop(
-                    onArrowBackClick = onArrowBackClick,
-                    pokemonImg = uiState.pokemonImg,
-                    dominantColor = uiState.dominantColor,
-                    pokemonInfoApiEntityInfo = uiState.pokemonInfo.data!!
-                )
-                Spacer(modifier = Modifier.height(20.dp))
-
-                PokemonDetailSection(
-                    pokemonInfoApiEntityInfo = uiState.pokemonInfo.data,
-                )
-
-            }
-        }
-
-        is Resource.Error -> {
-            Text(
-                text = uiState.pokemonInfo.message!!, color = Color.Red, modifier = modifier
-            )
-        }
-
-        is Resource.Loading -> {
-            CircularProgressIndicator(
-                color = MaterialTheme.colorScheme.primary, modifier = modifier
-            )
-        }
-    }
-}
-
 @Composable
 fun PokemonTop(
     onArrowBackClick: () -> Unit,

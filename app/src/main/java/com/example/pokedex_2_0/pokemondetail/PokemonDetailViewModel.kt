@@ -5,12 +5,14 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokedex_2_0.repository.PokemonRepository
-import com.example.pokedex_2_0.util.Resource
+import com.example.pokedex_2_0.util.Status
 import com.example.pokedex_2_0.util.UiStateDetail
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,8 +34,7 @@ class PokemonDetailViewModel @Inject constructor(
         pokemonName = requireNotNull(savedStateHandle.get<String>("pokemonName"))
         pokemonImg = requireNotNull(savedStateHandle.get<String>("pokemonImg"))
         dominantColor = requireNotNull(savedStateHandle.get<Int>("pokemonColor"))
-        _uiState.update { it.copy(pokemonImg = pokemonImg) }
-        _uiState.update { it.copy(dominantColor = Color(dominantColor)) }
+        _uiState.update { it.copy(pokemonImg = pokemonImg, dominantColor = Color(dominantColor)) }
         viewModelScope.launch {
             getPokemonInfo(pokemonName)
             observe()
@@ -44,9 +45,9 @@ class PokemonDetailViewModel @Inject constructor(
         pokemonRepository.getPokemonInfo(pokemonName)
     }
 
-    private suspend fun observe() {
-        pokemonRepository.getPokemonInfoByName(pokemonName).collect { pokemons ->
-            _uiState.update { it.copy(pokemonInfo = Resource.Success(data = pokemons)) }
-        }
+    private fun observe() {
+        pokemonRepository.getPokemonInfoByName(pokemonName).onEach { pokemon ->
+            _uiState.update { it.copy(pokemonInfo =  pokemon, status = Status.DONE)}
+        }.launchIn(viewModelScope)
     }
 }

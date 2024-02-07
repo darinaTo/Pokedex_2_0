@@ -30,6 +30,7 @@ class PokemonRepository @Inject constructor(
     suspend fun getPokemonList(offset: Int) {
         withContext(Dispatchers.IO) {
             runCatching {
+                //TODO check if pokemon exist in db
                 api.getPokemonList(offset)
             }.onSuccess {pokemonData->
                 savePokemonList(pokemonData)
