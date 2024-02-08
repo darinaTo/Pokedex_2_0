@@ -23,7 +23,9 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 NavHost(navController = navController, startDestination = POKEMON_LIST_ROUTE) {
                     composable(POKEMON_LIST_ROUTE) {
-                        PokemonListScreen(navController = navController)
+                        PokemonListScreen(onScreenTab = { route ->
+                            navController.navigate(route)
+                        })
                     }
                     composable(
                         "${POKEMON_DETAIL_ROUTE}/{pokemonColor}/{pokemonName}/{pokemonImg}",

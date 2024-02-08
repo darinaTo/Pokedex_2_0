@@ -34,7 +34,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.pokedex_2_0.data.models.PokemonUiEntity
 import com.example.pokedex_2_0.ui.theme.LightBlack
@@ -42,30 +41,29 @@ import com.example.pokedex_2_0.util.Constants.POKEMON_DETAIL_ROUTE
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
-// TODO: please see similar comment related to passing navControlled as a parameter
 @Composable
-fun PokemonListScreen(navController: NavController) {
+fun PokemonListScreen(onScreenTab : (String) -> Unit) {
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = LightBlack
     ) {
-        PokemonList(navController = navController)
+        PokemonList(onScreenTab = onScreenTab)
     }
 }
 
 @Composable
 fun PokemonList(
-    navController: NavController,
+    onScreenTab : (String) -> Unit,
     viewModel: PokemonViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    PokemonGrid(entriesList = uiState.pokemons, navController = navController)
+    PokemonGrid(entriesList = uiState.pokemons, onScreenTab = onScreenTab)
 }
 
 @Composable
 fun PokemonEntry(
     modifier: Modifier = Modifier,
-    navController: NavController,
+    onScreenTab : (String) -> Unit,
     entry: PokemonUiEntity,
     viewModel: PokemonViewModel = hiltViewModel()
 ) {
@@ -81,21 +79,18 @@ fun PokemonEntry(
             .aspectRatio(1f)
             .background(color)
             .clickable {
-                navController.navigate(
-                    "${POKEMON_DETAIL_ROUTE}/${color.toArgb()}/${entry.pokemonName}/${
-                        encodedUrl.substring(
-                            0,
-                            encodedUrl.lastIndex
-                        )
-                    }"
-                )
+                onScreenTab("${POKEMON_DETAIL_ROUTE}/${color.toArgb()}/${entry.pokemonName}/${
+                    encodedUrl.substring(
+                        0,
+                        encodedUrl.lastIndex
+                    )
+                }")
             }) {
         var isLoading by remember { mutableStateOf(true) }
         if (isLoading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
         Column {
-            //TODO Coil progress bar
             AsyncImage(
                 model = entry.imageUrl,
                 contentDescription = entry.pokemonName,
@@ -125,7 +120,7 @@ fun PokemonEntry(
 @Composable
 fun PokemonGrid(
     entriesList: List<PokemonUiEntity>,
-    navController: NavController,
+    onScreenTab : (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: PokemonViewModel = hiltViewModel()
 ) {
@@ -141,7 +136,7 @@ fun PokemonGrid(
             if (item.number >= entriesList.size - 1) {
                 viewModel.getPokemon()
             }
-            PokemonEntry(navController = navController, entry = item)
+            PokemonEntry(onScreenTab = onScreenTab, entry = item)
         }
     }
 }
