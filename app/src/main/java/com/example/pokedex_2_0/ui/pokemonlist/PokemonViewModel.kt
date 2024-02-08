@@ -1,4 +1,4 @@
-package com.example.pokedex_2_0.pokemonlist
+package com.example.pokedex_2_0.ui.pokemonlist
 
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
@@ -52,6 +52,10 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
                 onFinish(Color(color))
             }
         }
+    }
+
+    private fun oneSource() {
+
     }
 
     fun getPokemon() {

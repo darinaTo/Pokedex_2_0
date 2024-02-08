@@ -13,7 +13,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AiModule {
+object DatabaseModule {
     @Singleton
     @Provides
     fun provideDao(appDatabase: PokemonDatabase): PokemonDao = appDatabase.pokemonDao()

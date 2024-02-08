@@ -6,8 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.pokedex_2_0.pokemondetail.PokemonDetailScreen
-import com.example.pokedex_2_0.pokemonlist.PokemonListScreen
+import com.example.pokedex_2_0.ui.pokemondetail.PokemonDetailScreen
+import com.example.pokedex_2_0.ui.pokemonlist.PokemonListScreen
 import com.example.pokedex_2_0.ui.theme.Pokedex_2_0Theme
 import com.example.pokedex_2_0.util.Constants.POKEMON_DETAIL_ROUTE
 import com.example.pokedex_2_0.util.Constants.POKEMON_LIST_ROUTE

@@ -1,4 +1,4 @@
-package com.example.pokedex_2_0.pokemondetail
+package com.example.pokedex_2_0.ui.pokemondetail
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween

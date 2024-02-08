@@ -1,4 +1,4 @@
-package com.example.pokedex_2_0.pokemondetail
+package com.example.pokedex_2_0.ui.pokemondetail
 
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.SavedStateHandle
@@ -47,7 +47,7 @@ class PokemonDetailViewModel @Inject constructor(
 
     private fun observe() {
         pokemonRepository.getPokemonInfoByName(pokemonName).onEach { pokemon ->
-            _uiState.update { it.copy(pokemonInfo =  pokemon, status = Status.DONE)}
+            _uiState.update { it.copy(pokemonInfo = pokemon, status = Status.DONE) }
         }.launchIn(viewModelScope)
     }
 }

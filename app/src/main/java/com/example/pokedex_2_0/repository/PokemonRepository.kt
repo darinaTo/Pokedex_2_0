@@ -61,6 +61,7 @@ class PokemonRepository @Inject constructor(
     private suspend fun savePokemonInfo(pokemonInfoApiResponse: PokemonInfoApiResponse) {
         val pokemonEntity = pokemonInfoApiResponse.mapToDatabaseModel()
         val pokemonId = pokemonEntity.id
+
         val typeEntities = pokemonInfoApiResponse.types.mapTypeToDatabaseModel(pokemonId)
         val statEntities = pokemonInfoApiResponse.stats.mapStatToDatabaseModel(pokemonId)
             dao.insertPokemonInfo(pokemonEntity)
