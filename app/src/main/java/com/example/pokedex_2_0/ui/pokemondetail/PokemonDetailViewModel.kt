@@ -37,17 +37,13 @@ class PokemonDetailViewModel @Inject constructor(
         _uiState.update { it.copy(pokemonImg = pokemonImg, dominantColor = Color(dominantColor)) }
         viewModelScope.launch {
             getPokemonInfo(pokemonName)
-            observe()
         }
     }
 
-    private suspend fun getPokemonInfo(pokemonName: String) {
-        pokemonRepository.getPokemonInfo(pokemonName)
-    }
 
-    private fun observe() {
+    private suspend fun getPokemonInfo(pokemonName: String) {
         pokemonRepository.getPokemonInfoByName(pokemonName).onEach { pokemon ->
-            _uiState.update { it.copy(pokemonInfo = pokemon, status = Status.DONE) }
+                _uiState.update { it.copy(pokemonInfo = pokemon, status = Status.DONE) }
         }.launchIn(viewModelScope)
     }
 }

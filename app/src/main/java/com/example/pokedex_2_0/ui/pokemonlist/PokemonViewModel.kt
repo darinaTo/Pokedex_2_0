@@ -32,8 +32,8 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
     private val _uiState = MutableStateFlow(UiStateList())
     val uiState: StateFlow<UiStateList> = _uiState.asStateFlow()
 
-    private val pokemonFlow = pokemonRepository.pokemonList.onEach { pokemons ->
-        _uiState.update { it.copy(pokemons = pokemons) }
+    private val pokemonFlow = pokemonRepository.pokemonList.onEach { pokemon ->
+        _uiState.update { it.copy(pokemon = pokemon) }
     }
 
 
@@ -54,9 +54,6 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
         }
     }
 
-    private fun oneSource() {
-
-    }
 
     fun getPokemon() {
         viewModelScope.launch(Dispatchers.IO) {

@@ -189,7 +189,7 @@ fun PokemonTypeSection(types: List<Type>) {
     ) {
         items(types) { type ->
             Box(
-                contentAlignment = Alignment.Center,
+                contentAlignment = Center,
                 modifier = Modifier
                     .width(IntrinsicSize.Max)
                     .padding(13.dp)
@@ -280,12 +280,12 @@ fun PokemonTopDetail(
         }
 
         Text(
-            text = if (pokemonId > 10) {
+            text = if (pokemonId in 10..100) {
                 "#0$pokemonId"
-            } else if (pokemonId < 10) {
+            } else if (pokemonId <= 10) {
                 "#00$pokemonId"
             } else {
-                "$pokemonId"
+                "#$pokemonId"
             },
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
@@ -389,7 +389,7 @@ fun PokemonBaseStats(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = CenterHorizontally
     ) {
         Text(
             text = stringResource(R.string.base_stats),

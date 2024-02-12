@@ -57,7 +57,7 @@ fun PokemonList(
     viewModel: PokemonViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    PokemonGrid(entriesList = uiState.pokemons, onScreenTab = onScreenTab)
+    PokemonGrid(entriesList = uiState.pokemon, onScreenTab = onScreenTab)
 }
 
 @Composable

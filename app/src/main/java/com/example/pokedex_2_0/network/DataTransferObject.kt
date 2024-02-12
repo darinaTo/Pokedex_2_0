@@ -36,6 +36,7 @@ fun List<PokemonDBEntity>.mapToUiEntity(): List<PokemonUiEntity> {
     }
 }
 
+
 fun PokemonInfoApiResponse.mapToDatabaseModel(): PokemonInfoDBEntity {
     return PokemonInfoDBEntity(
         id = this.id,

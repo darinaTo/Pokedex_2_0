@@ -13,6 +13,7 @@ import com.example.pokedex_2_0.network.mapTypeToDatabaseModel
 import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -23,16 +24,24 @@ class PokemonRepository @Inject constructor(
     private val api: PokeApi
 ) {
     val pokemonList: Flow<List<PokemonUiEntity>> = dao.getListPokemon().map { it.mapToUiEntity() }
-    fun getPokemonInfoByName(name: String): Flow<PokemonUiInfoEntity> {
-        return dao.getPokemonInfo(name).map { it.mapToUiEntity() }
+    private suspend fun fetchPokemonInfoByName(name: String) {
+        return withContext(Dispatchers.IO) {
+            if (dao.getPokemonInfo(name).first() == null) {
+                getPokemonInfo(name)
+            }
+        }
+    }
+
+    suspend fun getPokemonInfoByName(name: String): Flow<PokemonUiInfoEntity> {
+        fetchPokemonInfoByName(name);
+        return dao.getPokemonInfo(name).map { it!!.mapToUiEntity() }
     }
 
     suspend fun getPokemonList(offset: Int) {
         withContext(Dispatchers.IO) {
             runCatching {
-                //TODO check if pokemon exist in db
                 api.getPokemonList(offset)
-            }.onSuccess {pokemonData->
+            }.onSuccess { pokemonData ->
                 savePokemonList(pokemonData)
             }.onFailure { exception ->
                 throw RuntimeException("Can't get pokemon list, api status: ${exception.message}")
@@ -41,13 +50,13 @@ class PokemonRepository @Inject constructor(
     }
 
     //create separate interface for repository todo you may do it later on the final stage
-    suspend fun getPokemonInfo(name: String) {
+    private suspend fun getPokemonInfo(name: String) {
         withContext(Dispatchers.IO) {
             runCatching {
                 api.getPokemonInfo(name)
-            }.onSuccess {pokemonData ->
+            }.onSuccess { pokemonData ->
                 savePokemonInfo(pokemonData)
-            }.onFailure {exception ->
+            }.onFailure { exception ->
                 throw RuntimeException("Can't get the pokemon info, api status: ${exception.message}")
             }
         }
@@ -64,8 +73,8 @@ class PokemonRepository @Inject constructor(
 
         val typeEntities = pokemonInfoApiResponse.types.mapTypeToDatabaseModel(pokemonId)
         val statEntities = pokemonInfoApiResponse.stats.mapStatToDatabaseModel(pokemonId)
-            dao.insertPokemonInfo(pokemonEntity)
-            dao.insertTypes(typeEntities)
-            dao.insertStats(statEntities)
+        dao.insertPokemonInfo(pokemonEntity)
+        dao.insertTypes(typeEntities)
+        dao.insertStats(statEntities)
     }
 }
