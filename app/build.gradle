@@ -115,5 +115,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-compose:$lifecycle_version"
 
 
-
+   //WorkManager
+    implementation "androidx.work:work-runtime-ktx:2.9.0"
 }

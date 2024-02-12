@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import com.example.pokedex_2_0.database.entities.PokemonDBEntity
 import com.example.pokedex_2_0.database.entities.PokemonInfoDBEntity
 import com.example.pokedex_2_0.database.entities.PokemonInfoFullInfo
@@ -16,6 +17,7 @@ interface PokemonDao {
     @Query("select * from pokemon")
     fun getListPokemon(): Flow<List<PokemonDBEntity>>
 
+    @Transaction
     @Query("select * from pokemon_info where name =:name")
     fun getPokemonInfo(name : String): Flow<PokemonInfoFullInfo?>
 
