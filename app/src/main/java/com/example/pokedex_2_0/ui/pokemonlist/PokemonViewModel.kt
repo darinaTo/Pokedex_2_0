@@ -3,7 +3,6 @@ package com.example.pokedex_2_0.ui.pokemonlist
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -57,17 +56,9 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
 
     fun getPokemon() {
         viewModelScope.launch(Dispatchers.IO) {
-            Log.i("mytag", "getPokemon: VM ${Thread.currentThread().name}")
-            _uiState.update { it.copy(status = Status.LOADING) }
-
-            try {
                 currentPage += OFFSET
                 pokemonRepository.getPokemonList(currentPage)
                 _uiState.update { it.copy(status = Status.DONE) }
-            } catch (e: Exception) {
-                _uiState.update { it.copy(status = Status.ERROR) }
-                throw RuntimeException("Can't get pokemon from data base, $e")
-            }
         }
     }
 }

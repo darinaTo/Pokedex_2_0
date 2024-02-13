@@ -25,13 +25,6 @@ class PokemonRepository @Inject constructor(
     private val api: PokeApi
 ) {
     val pokemonList: Flow<List<PokemonUiEntity>> = dao.getListPokemon().map { it.mapToUiEntity() }
-    private suspend fun fetchPokemonInfoByName(name: String) {
-        return withContext(Dispatchers.IO) {
-            if (dao.getPokemonInfo(name).first() == null) {
-                getPokemonInfo(name)
-            }
-        }
-    }
 
     suspend fun getPokemonInfoByName(name: String): Flow<PokemonUiInfoEntity> {
         return withContext(Dispatchers.IO) {
