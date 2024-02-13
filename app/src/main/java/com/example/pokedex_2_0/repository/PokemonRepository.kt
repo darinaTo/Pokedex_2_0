@@ -13,6 +13,7 @@ import com.example.pokedex_2_0.network.mapTypeToDatabaseModel
 import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -33,8 +34,13 @@ class PokemonRepository @Inject constructor(
     }
 
     suspend fun getPokemonInfoByName(name: String): Flow<PokemonUiInfoEntity> {
-        fetchPokemonInfoByName(name);
-        return dao.getPokemonInfo(name).map { it!!.mapToUiEntity() }
+        return withContext(Dispatchers.IO) {
+            dao.getPokemonInfo(name).also { flow ->
+                if (flow.first() == null) {
+                    getPokemonInfo(name)
+                }
+            }.filterNotNull().map { it.mapToUiEntity() }
+        }
     }
 
     suspend fun getPokemonList(offset: Int) {
