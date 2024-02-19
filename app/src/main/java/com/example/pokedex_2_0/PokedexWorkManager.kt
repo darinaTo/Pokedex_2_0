@@ -5,7 +5,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
@@ -28,30 +27,30 @@ class PokedexWorkManager @AssistedInject constructor(
     }
 
     private fun showNotification(context: Context) {
-        val intent = Intent(applicationContext, MainActivity::class.java)
-        intent.flags = FLAG_ACTIVITY_NEW_TASK
-        intent.putExtra("NOTIFICATION_ID", NOTIFICATION_ID)
+        val intent = Intent(applicationContext, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
         val pendingIntent: PendingIntent =
             PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
-        val notificationManager =
-            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        val notification = NotificationCompat
-            .Builder(context, CHANNEL_ID)
+        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.icon)
             .setContentTitle("notificationTitle")
-            .setContentIntent(pendingIntent)
             .setContentText("notificationContent")
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
+            .setTimeoutAfter(2000)
 
-        Log.d("mytag", "showNotification")
 
         val channel =
             NotificationChannel(CHANNEL_ID, "pokedex", NotificationManager.IMPORTANCE_DEFAULT)
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
 
         notificationManager.notify(NOTIFICATION_ID, notification.build())
+        Log.d("mytag", "showNotification")
     }
 }
