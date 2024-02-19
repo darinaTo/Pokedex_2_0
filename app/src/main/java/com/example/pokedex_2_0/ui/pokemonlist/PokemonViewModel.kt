@@ -37,7 +37,7 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
 
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             pokemonRepository.getPokemonList(currentPage)
             pokemonFlow.launchIn(viewModelScope)
         }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "829927239156",
+    "project_id": "pokedex-2-0-bfbea",
+    "storage_bucket": "pokedex-2-0-bfbea.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:829927239156:android:b9ae5cdf050c6cd44bdda1",
+        "android_client_info": {
+          "package_name": "com.example.pokedex_2_0"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC34gUChi55Gj3aKDAhv-Q1pNQq4dh_uq8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
