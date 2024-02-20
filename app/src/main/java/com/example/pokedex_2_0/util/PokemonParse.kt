@@ -30,8 +30,7 @@ import com.example.pokedex_2_0.ui.theme.TypeWater
 import java.util.Locale
 
 fun parseTypeToColor(type: Type): Color {
-    // TODO: Please check IDE's hints about toLowerCase()
-    return when (type.type.name.toLowerCase(Locale.ROOT)) {
+    return when (type.type.name.lowercase(Locale.ROOT)) {
         "normal" -> TypeNormal
         "fire" -> TypeFire
         "water" -> TypeWater

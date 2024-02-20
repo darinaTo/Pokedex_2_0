@@ -47,10 +47,9 @@ class PokedexWorkManager @AssistedInject constructor(
 
         return NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.icon)
-            .setContentTitle("notificationTitle")
-            .setContentText("notificationContent")
+            .setContentTitle("Pokemon miss you")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setOngoing(true)
+            .setAutoCancel(true)
             .setContentIntent(pendingIntent)
     }
 }

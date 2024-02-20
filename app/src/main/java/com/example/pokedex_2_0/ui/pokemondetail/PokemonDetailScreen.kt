@@ -64,7 +64,6 @@ import kotlin.math.round
 
 @Composable
 fun PokemonDetailScreen(
-//TODO workManager : add maybe notification add calculate dominant color -> на головній сторонці
     //TODO useCase
     viewModel: PokemonDetailViewModel = hiltViewModel(),
     onArrowBackClick: () -> Unit
@@ -232,7 +231,6 @@ fun PokemonTop(
                 onArrowBackClick = onArrowBackClick,
                 pokemonId = pokemonInfoApiEntityInfo.id
             )
-            //todo cache in coil
             AsyncImage(
                 model = pokemonImg,
                 contentDescription = pokemonInfoApiEntityInfo.name,
