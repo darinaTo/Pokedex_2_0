@@ -64,7 +64,6 @@ import kotlin.math.round
 
 @Composable
 fun PokemonDetailScreen(
-    //TODO useCase
     viewModel: PokemonDetailViewModel = hiltViewModel(),
     onArrowBackClick: () -> Unit
 ) {
@@ -279,11 +278,11 @@ fun PokemonTopDetail(
 
         Text(
             text = if (pokemonId in 10..100) {
-                "#0$pokemonId"
+                stringResource(R.string.id_0, pokemonId)
             } else if (pokemonId <= 10) {
-                "#00$pokemonId"
+                stringResource(R.string.id_00, pokemonId)
             } else {
-                "#$pokemonId"
+                stringResource(R.string.id, pokemonId)
             },
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,

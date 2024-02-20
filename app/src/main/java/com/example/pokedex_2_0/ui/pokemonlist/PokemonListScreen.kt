@@ -42,28 +42,48 @@ import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 @Composable
-fun PokemonListScreen(onScreenTab : (String) -> Unit) {
+fun PokemonListScreen(
+    onScreenTab: (String) -> Unit,
+    viewModel: PokemonViewModel = hiltViewModel()
+) {
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = LightBlack
     ) {
-        PokemonList(onScreenTab = onScreenTab)
+        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+        PokemonGrid(entriesList = uiState.pokemon, onScreenTab = onScreenTab)
     }
 }
 
+
 @Composable
-fun PokemonList(
-    onScreenTab : (String) -> Unit,
+fun PokemonGrid(
+    entriesList: List<PokemonUiEntity>,
+    onScreenTab: (String) -> Unit,
+    modifier: Modifier = Modifier,
     viewModel: PokemonViewModel = hiltViewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    PokemonGrid(entriesList = uiState.pokemon, onScreenTab = onScreenTab)
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
+        contentPadding = PaddingValues(horizontal = 13.dp),
+        horizontalArrangement = Arrangement.spacedBy(13.dp),
+        verticalArrangement = Arrangement.spacedBy(13.dp),
+        state = rememberLazyGridState(),
+        modifier = modifier
+    ) {
+        items(entriesList) { item ->
+            if (item.number >= entriesList.size - 1) {
+                viewModel.getPokemon()
+            }
+            PokemonEntry(onScreenTab = onScreenTab, entry = item)
+        }
+    }
 }
 
 @Composable
 fun PokemonEntry(
     modifier: Modifier = Modifier,
-    onScreenTab : (String) -> Unit,
+    onScreenTab: (String) -> Unit,
     entry: PokemonUiEntity,
     viewModel: PokemonViewModel = hiltViewModel()
 ) {
@@ -79,12 +99,14 @@ fun PokemonEntry(
             .aspectRatio(1f)
             .background(color)
             .clickable {
-                onScreenTab("${POKEMON_DETAIL_ROUTE}/${color.toArgb()}/${entry.pokemonName}/${
-                    encodedUrl.substring(
-                        0,
-                        encodedUrl.lastIndex
-                    )
-                }")
+                onScreenTab(
+                    "${POKEMON_DETAIL_ROUTE}/${color.toArgb()}/${entry.pokemonName}/${
+                        encodedUrl.substring(
+                            0,
+                            encodedUrl.lastIndex
+                        )
+                    }"
+                )
             }) {
         var isLoading by remember { mutableStateOf(true) }
         if (isLoading) {
@@ -113,30 +135,6 @@ fun PokemonEntry(
                 color = Color.White,
                 modifier = Modifier.fillMaxWidth()
             )
-        }
-    }
-}
-
-@Composable
-fun PokemonGrid(
-    entriesList: List<PokemonUiEntity>,
-    onScreenTab : (String) -> Unit,
-    modifier: Modifier = Modifier,
-    viewModel: PokemonViewModel = hiltViewModel()
-) {
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
-        contentPadding = PaddingValues(horizontal = 13.dp),
-        horizontalArrangement = Arrangement.spacedBy(13.dp),
-        verticalArrangement = Arrangement.spacedBy(13.dp),
-        state = rememberLazyGridState(),
-        modifier = modifier
-    ) {
-        items(entriesList) { item ->
-            if (item.number >= entriesList.size - 1) {
-                viewModel.getPokemon()
-            }
-            PokemonEntry(onScreenTab = onScreenTab, entry = item)
         }
     }
 }
