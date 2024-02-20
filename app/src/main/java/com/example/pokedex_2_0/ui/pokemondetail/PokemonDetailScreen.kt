@@ -27,9 +27,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -55,6 +59,7 @@ import com.example.pokedex_2_0.R
 import com.example.pokedex_2_0.data.models.PokemonUiInfoEntity
 import com.example.pokedex_2_0.data.models.request.pokemondetail.Type
 import com.example.pokedex_2_0.ui.theme.Black
+import com.example.pokedex_2_0.ui.theme.LightBlack
 import com.example.pokedex_2_0.util.Status
 import com.example.pokedex_2_0.util.parseStatToAbbr
 import com.example.pokedex_2_0.util.parseStatToColor
@@ -62,12 +67,14 @@ import com.example.pokedex_2_0.util.parseTypeToColor
 import kotlin.math.absoluteValue
 import kotlin.math.round
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PokemonDetailScreen(
     viewModel: PokemonDetailViewModel = hiltViewModel(),
     onArrowBackClick: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val pokemonId = uiState.pokemonInfo.id
 
     Box(
         modifier = Modifier
@@ -80,23 +87,99 @@ fun PokemonDetailScreen(
                 modifier = Modifier.align(Center)
             )
         } else {
-            Column {
-                PokemonTop(
-                    onArrowBackClick = onArrowBackClick,
-                    pokemonImg = uiState.pokemonImg,
-                    dominantColor = uiState.dominantColor,
-                    pokemonInfoApiEntityInfo = uiState.pokemonInfo
-                )
-                Spacer(modifier = Modifier.height(20.dp))
-
-                PokemonDetailSection(
-                    pokemonInfoApiEntityInfo = uiState.pokemonInfo,
-                )
-
-            }
+                Scaffold(
+                    topBar = {
+                        TopAppBar(title = {
+                            Text(
+                                text = stringResource(R.string.pokedex),
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White,
+                                modifier = Modifier
+                                    .padding(horizontal = 10.dp)
+                            )
+                        }, colors = TopAppBarDefaults.smallTopAppBarColors(
+                            containerColor = uiState.dominantColor,
+                            titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                        ), navigationIcon = {
+                            Icon(
+                                imageVector = Icons.Default.ArrowBack,
+                                contentDescription = null,
+                                tint = Color.White,
+                                modifier = Modifier
+                                    .size(25.dp)
+                                    .clickable {
+                                        onArrowBackClick()
+                                    }
+                            )
+                        },
+                            actions = {
+                                Text(
+                                    text = if (pokemonId in 10..100) {
+                                        stringResource(R.string.id_0, pokemonId)
+                                    } else if (pokemonId <= 10) {
+                                        stringResource(R.string.id_00, pokemonId)
+                                    } else {
+                                        stringResource(R.string.id, pokemonId)
+                                    },
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.White,
+                                )
+                            }
+                        )
+                    }
+                ) { innerPadding ->
+                    PokemonTop(
+                        modifier = Modifier.padding(innerPadding),
+                        pokemonImg = uiState.pokemonImg,
+                        dominantColor = uiState.dominantColor,
+                        pokemonInfoApiEntityInfo = uiState.pokemonInfo
+                    )
+                }
         }
     }
 }
+
+@Composable
+fun PokemonTop(
+    pokemonImg: String,
+    dominantColor: Color,
+    pokemonInfoApiEntityInfo: PokemonUiInfoEntity,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = Modifier
+            .background(LightBlack)
+    ) {
+        Box(
+            modifier = modifier
+                .fillMaxHeight(0.3f)
+                .fillMaxWidth()
+                .clip(
+                    RoundedCornerShape(
+                        bottomStart = 50.dp, bottomEnd = 50.dp
+                    )
+                )
+                .background(dominantColor),
+        ) {
+            AsyncImage(
+                model = pokemonImg,
+                contentDescription = pokemonInfoApiEntityInfo.name,
+                modifier = Modifier
+                    .size(250.dp)
+                    .padding(horizontal = 20.dp)
+                    .align(Center),
+            )
+        }
+        Spacer(modifier = Modifier.height(20.dp))
+
+        PokemonDetailSection(
+            pokemonInfoApiEntityInfo = pokemonInfoApiEntityInfo,
+        )
+    }
+}
+
 
 @Composable
 fun PokemonDetailSection(
@@ -206,91 +289,6 @@ fun PokemonTypeSection(types: List<Type>) {
         }
     }
 }
-@Composable
-fun PokemonTop(
-    onArrowBackClick: () -> Unit,
-    pokemonImg: String,
-    dominantColor: Color,
-    pokemonInfoApiEntityInfo: PokemonUiInfoEntity,
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = modifier
-            .fillMaxHeight(0.3f)
-            .fillMaxWidth()
-            .clip(
-                RoundedCornerShape(
-                    bottomStart = 50.dp, bottomEnd = 50.dp
-                )
-            )
-            .background(dominantColor),
-    ) {
-        Column {
-            PokemonTopDetail(
-                onArrowBackClick = onArrowBackClick,
-                pokemonId = pokemonInfoApiEntityInfo.id
-            )
-            AsyncImage(
-                model = pokemonImg,
-                contentDescription = pokemonInfoApiEntityInfo.name,
-                modifier = Modifier
-                    .size(250.dp)
-                    .padding(horizontal = 20.dp)
-                    .align(CenterHorizontally),
-            )
-        }
-    }
-}
-
-
-@Composable
-fun PokemonTopDetail(
-    onArrowBackClick: () -> Unit = {},
-    pokemonId: Int
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 10.dp, vertical = 10.dp)
-    ) {
-        Row {
-            Icon(
-                imageVector = Icons.Default.ArrowBack,
-                contentDescription = null,
-                tint = Color.White,
-                modifier = Modifier
-                    .size(25.dp)
-                    .align(Alignment.Top)
-                    .clickable {
-                        onArrowBackClick()
-                    }
-
-            )
-            Text(
-                text = stringResource(R.string.pokedex),
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White,
-                modifier = Modifier
-                    .padding(horizontal = 10.dp),
-            )
-        }
-
-        Text(
-            text = if (pokemonId in 10..100) {
-                stringResource(R.string.id_0, pokemonId)
-            } else if (pokemonId <= 10) {
-                stringResource(R.string.id_00, pokemonId)
-            } else {
-                stringResource(R.string.id, pokemonId)
-            },
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.White,
-            modifier = Modifier.align(Alignment.TopEnd),
-        )
-    }
-}
 
 @Composable
 fun PokemonStat(
@@ -364,7 +362,7 @@ fun PokemonStat(
             }
             if (textShow.absoluteValue.toInt() <= 20) {
                 Text(
-                    text = "${statValue}/$maxValue",
+                    text = stringResource(R.string.percent, statValue, maxValue),
                     fontSize = 16.sp,
                     color = Color.Black,
                     modifier = Modifier

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -16,9 +17,13 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,17 +47,38 @@ import com.example.pokedex_2_0.util.Constants.POKEMON_DETAIL_ROUTE
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PokemonListScreen(
     onScreenTab: (String) -> Unit,
     viewModel: PokemonViewModel = hiltViewModel()
 ) {
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = LightBlack
-    ) {
-        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-        PokemonGrid(entriesList = uiState.pokemon, onScreenTab = onScreenTab)
+    Scaffold(topBar = {
+        TopAppBar(
+            title = {
+                Text(
+                    text = "Pokedex",
+                    fontSize = 23.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .padding(horizontal = 10.dp),
+                )
+            },
+            colors = TopAppBarDefaults.smallTopAppBarColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                titleContentColor = MaterialTheme.colorScheme.onPrimary,
+            )
+        )
+    }) { paddingValues ->
+        Surface(
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize(),
+            color = LightBlack
+        ) {
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+            PokemonGrid(entriesList = uiState.pokemon, onScreenTab = onScreenTab)
+        }
     }
 }
 
@@ -69,7 +96,7 @@ fun PokemonGrid(
         horizontalArrangement = Arrangement.spacedBy(13.dp),
         verticalArrangement = Arrangement.spacedBy(13.dp),
         state = rememberLazyGridState(),
-        modifier = modifier
+        modifier = modifier.padding(top = 15.dp)
     ) {
         items(entriesList) { item ->
             if (item.number >= entriesList.size - 1) {
