@@ -14,7 +14,7 @@ object Constants {
     const val POKEMON_LIST_ROUTE = "pokemon_list_screen"
     const val POKEMON_DETAIL_ROUTE = "pokemon_detail_screen"
     const val CHANNEL_ID = "POKEDEX_NOTIFICATION"
-    const val NOTIFICATION_ID = 0
+    const val NOTIFICATION_ID = 1
 
 
     val pokemonDetailArguments = listOf(
