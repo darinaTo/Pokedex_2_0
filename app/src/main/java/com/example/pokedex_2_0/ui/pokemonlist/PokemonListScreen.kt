@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -41,6 +42,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.example.pokedex_2_0.R
 import com.example.pokedex_2_0.data.models.PokemonUiEntity
 import com.example.pokedex_2_0.ui.theme.LightBlack
 import com.example.pokedex_2_0.util.Constants.POKEMON_DETAIL_ROUTE
@@ -50,14 +52,15 @@ import java.nio.charset.StandardCharsets
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PokemonListScreen(
-    onScreenTab: (String) -> Unit,
+    onScreenTap: (String) -> Unit,
     viewModel: PokemonViewModel = hiltViewModel()
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     Scaffold(topBar = {
         TopAppBar(
             title = {
                 Text(
-                    text = "Pokedex",
+                    text = stringResource(R.string.pokedex),
                     fontSize = 23.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
@@ -76,8 +79,7 @@ fun PokemonListScreen(
                 .fillMaxSize(),
             color = LightBlack
         ) {
-            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-            PokemonGrid(entriesList = uiState.pokemon, onScreenTab = onScreenTab)
+            PokemonGrid(entriesList = uiState.pokemon, onScreenTab = onScreenTap, defaultColor =  uiState.defaultColor)
         }
     }
 }
@@ -87,22 +89,25 @@ fun PokemonListScreen(
 fun PokemonGrid(
     entriesList: List<PokemonUiEntity>,
     onScreenTab: (String) -> Unit,
+    defaultColor: Color,
     modifier: Modifier = Modifier,
-    viewModel: PokemonViewModel = hiltViewModel()
+    viewModel: PokemonViewModel = hiltViewModel() // TODO: replace with lambda instead of VM passing
 ) {
+    val state = rememberLazyGridState()
+
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
-        contentPadding = PaddingValues(horizontal = 13.dp),
+        contentPadding = PaddingValues(horizontal = 14.dp),
         horizontalArrangement = Arrangement.spacedBy(13.dp),
         verticalArrangement = Arrangement.spacedBy(13.dp),
-        state = rememberLazyGridState(),
-        modifier = modifier.padding(top = 15.dp)
+        state = state,// TODO: Please use state hoisting approach
+        modifier = modifier.padding(top = 14.dp)
     ) {
         items(entriesList) { item ->
-            if (item.number >= entriesList.size - 1) {
-                viewModel.getPokemon()
+            if (state.canScrollForward) {
+                viewModel.getPokemon()// TODO: replace with lambda instead of VM passing
             }
-            PokemonEntry(onScreenTab = onScreenTab, entry = item)
+            PokemonEntry(onScreenTab = onScreenTab, entry = item, defaultColor = defaultColor )
         }
     }
 }
@@ -112,12 +117,15 @@ fun PokemonEntry(
     modifier: Modifier = Modifier,
     onScreenTab: (String) -> Unit,
     entry: PokemonUiEntity,
-    viewModel: PokemonViewModel = hiltViewModel()
+    defaultColor : Color,
+    viewModel: PokemonViewModel = hiltViewModel() // TODO: same as above
 ) {
-    val defaultColor = MaterialTheme.colorScheme.surface
+    // TODO: Please use state hoisting approach and move this parameter to uiState
     var color by remember {
         mutableStateOf(defaultColor)
     }
+    //TODO: Encoding logic could be moved to extension function
+    // And maybe safeArgs plugin can simplify this issue
     val encodedUrl = URLEncoder.encode(entry.imageUrl, StandardCharsets.UTF_8.toString())
 
     Box(contentAlignment = Alignment.Center,
@@ -127,6 +135,7 @@ fun PokemonEntry(
             .background(color)
             .clickable {
                 onScreenTab(
+                    // TODO: could be simplified with passing arguments only and please use formatting
                     "${POKEMON_DETAIL_ROUTE}/${color.toArgb()}/${entry.pokemonName}/${
                         encodedUrl.substring(
                             0,
@@ -135,8 +144,9 @@ fun PokemonEntry(
                     }"
                 )
             }) {
-        var isLoading by remember { mutableStateOf(true) }
-        if (isLoading) {
+        // TODO: please use state hoisting
+        var isLoading by remember { mutableStateOf(true) } // TODO: should be part of uiState
+        if (isLoading) { 
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
         Column {

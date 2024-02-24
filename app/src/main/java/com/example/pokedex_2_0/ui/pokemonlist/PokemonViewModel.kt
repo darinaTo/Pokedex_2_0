@@ -10,7 +10,7 @@ import androidx.palette.graphics.Palette
 import com.example.pokedex_2_0.repository.PokemonRepository
 import com.example.pokedex_2_0.util.Constants.OFFSET
 import com.example.pokedex_2_0.util.Status
-import com.example.pokedex_2_0.util.UiStateList
+import com.example.pokedex_2_0.util.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,8 +28,8 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
 
     private var currentPage = 0
 
-    private val _uiState = MutableStateFlow(UiStateList())
-    val uiState: StateFlow<UiStateList> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(UiState())
+    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 
     private val pokemonFlow = pokemonRepository.pokemonList.onEach { pokemon ->
         _uiState.update { it.copy(pokemon = pokemon) }
@@ -43,10 +43,14 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
         }
     }
 
+    //TODO: This functionality more appropriate for some util-type entities.
+    // Consider moving to separate file or combine with similar entity
+    // Also it could be an extension function
     fun calcColor(drawable: Drawable, onFinish: (Color) -> Unit) {
         val bitmap = (drawable as BitmapDrawable).bitmap.copy(Bitmap.Config.ARGB_8888, true)
-
-        Palette.from(bitmap!!).generate { palette ->
+        // TODO: Bitmap is non-nullable there ia no necessity to use unsafe call.
+        //  AND unsafe call without null-check is evil
+        Palette.from(bitmap).generate { palette ->
             palette?.dominantSwatch?.rgb?.let { color ->
                 onFinish(Color(color))
             }
@@ -58,7 +62,7 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
         viewModelScope.launch(Dispatchers.IO) {
                 currentPage += OFFSET
                 pokemonRepository.getPokemonList(currentPage)
-                _uiState.update { it.copy(status = Status.DONE) }
+                _uiState.update { it.copy(status = Status.DONE) } // TODO: it is better to set this value in pokemonFlow onEach
         }
     }
 }

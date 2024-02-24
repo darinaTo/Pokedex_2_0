@@ -1,8 +1,6 @@
 package com.example.pokedex_2_0.data.di
 
-import com.example.pokedex_2_0.database.PokemonDao
 import com.example.pokedex_2_0.network.PokeApi
-import com.example.pokedex_2_0.repository.PokemonRepository
 import com.example.pokedex_2_0.util.Constants
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -17,10 +15,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-    @Singleton
-    @Provides
-    fun providePokemonRepository(dao: PokemonDao, api: PokeApi): PokemonRepository =
-        PokemonRepository(dao, api)
 
     @Singleton
     @Provides

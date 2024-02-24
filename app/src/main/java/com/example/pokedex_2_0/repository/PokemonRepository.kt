@@ -14,7 +14,7 @@ import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -29,7 +29,7 @@ class PokemonRepository @Inject constructor(
     suspend fun getPokemonInfoByName(name: String): Flow<PokemonUiInfoEntity> {
         return withContext(Dispatchers.IO) {
             dao.getPokemonInfo(name).also { flow ->
-                if (flow.first() == null) {
+                if (flow.firstOrNull() == null) {
                     getPokemonInfo(name)
                 }
             }.filterNotNull().map { it.mapToUiEntity() }
@@ -43,6 +43,10 @@ class PokemonRepository @Inject constructor(
             }.onSuccess { pokemonData ->
                 savePokemonList(pokemonData)
             }.onFailure { exception ->
+                //TODO: It is better to add some error-handling functionality to display user some message and not just app crash
+                // and please consider adding some network state observing functionality
+                // bc there is crash in case if network is lost at the moment
+                // f.e. it could be some errorFlow which emits error type or message in case of error
                 throw RuntimeException("Can't get pokemon list, api status: ${exception.message}")
             }
         }
@@ -56,6 +60,7 @@ class PokemonRepository @Inject constructor(
             }.onSuccess { pokemonData ->
                 savePokemonInfo(pokemonData)
             }.onFailure { exception ->
+                // TODO: same as above
                 throw RuntimeException("Can't get the pokemon info, api status: ${exception.message}")
             }
         }

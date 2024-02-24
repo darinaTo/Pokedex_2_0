@@ -84,12 +84,15 @@ fun List<Stat>.mapStatToDatabaseModel(pokemonId : Int) : List<StatEntityDB> {
         )
     }
 }
+
+// TODO: This function is more related to util entities. Better move to util package
 private fun extractPokemonNumber(link: String): Int {
     val regex = Regex("/pokemon/(\\d+)/")
     val matchResult = regex.find(link)
     return matchResult?.groupValues?.get(1)?.toIntOrNull() ?: -1
 }
 
+// TODO: This function is more related to util entities. Better move to util package
 private fun getPokemonImageUrl(number: Int): String {
     return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${number}.png "
 }

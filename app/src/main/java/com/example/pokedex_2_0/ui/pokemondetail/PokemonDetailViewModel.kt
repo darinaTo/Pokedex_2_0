@@ -40,7 +40,7 @@ class PokemonDetailViewModel @Inject constructor(
         }
     }
 
-
+    // TODO: parameter could be removed as pokemonName is available in method's scope
     private suspend fun getPokemonInfo(pokemonName: String) {
         pokemonRepository.getPokemonInfoByName(pokemonName).onEach { pokemon ->
                 _uiState.update { it.copy(pokemonInfo = pokemon, status = Status.DONE) }

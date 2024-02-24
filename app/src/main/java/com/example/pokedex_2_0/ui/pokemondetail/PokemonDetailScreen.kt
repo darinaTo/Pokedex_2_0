@@ -81,6 +81,7 @@ fun PokemonDetailScreen(
             .fillMaxSize()
             .background(Black),
     ) {
+        // TODO: you may extract such checks to uiState. Please see UiState class for example
         if (uiState.status == Status.LOADING) {
             CircularProgressIndicator(
                 color = MaterialTheme.colorScheme.primary,
@@ -102,6 +103,8 @@ fun PokemonDetailScreen(
                             containerColor = uiState.dominantColor,
                             titleContentColor = MaterialTheme.colorScheme.onPrimary,
                         ), navigationIcon = {
+
+                            // TODO: There is IconButton composable. You may use it instead for click handling
                             Icon(
                                 imageVector = Icons.Default.ArrowBack,
                                 contentDescription = null,
@@ -231,6 +234,11 @@ fun PokemonDetailDataItem(
 fun PokemonDetailDataSection(
     pokemonWeight: Int, pokemonHeight: Int, sectionHeight: Dp = 8.dp
 ) {
+
+    //TODO: Please move this calculation to VM level or use get() in uiState
+    // also toFloat() method could be used
+    // bc these calculation could made some distortions in original data
+    // f.e. bulbasaur weight id 69 , however 6.9 is displayed. Same for height
     val pokemonWeightInKg = remember {
         round(pokemonWeight * 100f) / 1000f
     }
@@ -290,6 +298,7 @@ fun PokemonTypeSection(types: List<Type>) {
     }
 }
 
+// TODO: Please consider simplification of these Composable combination as potential optimisation
 @Composable
 fun PokemonStat(
     statName: String,
@@ -354,7 +363,7 @@ fun PokemonStat(
             ) {
                 if (textShow.absoluteValue.toInt() > 20) {
                     Text(
-                        text = "${statValue}/$maxValue",
+                        text = stringResource(R.string.percent, statValue, maxValue),
                         fontSize = 16.sp,
                         color = Color.White
                     )
