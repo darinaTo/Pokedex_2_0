@@ -60,12 +60,10 @@ import com.example.pokedex_2_0.data.models.PokemonUiInfoEntity
 import com.example.pokedex_2_0.data.models.request.pokemondetail.Type
 import com.example.pokedex_2_0.ui.theme.Black
 import com.example.pokedex_2_0.ui.theme.LightBlack
-import com.example.pokedex_2_0.util.Status
 import com.example.pokedex_2_0.util.parseStatToAbbr
 import com.example.pokedex_2_0.util.parseStatToColor
 import com.example.pokedex_2_0.util.parseTypeToColor
 import kotlin.math.absoluteValue
-import kotlin.math.round
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -81,65 +79,64 @@ fun PokemonDetailScreen(
             .fillMaxSize()
             .background(Black),
     ) {
-        // TODO: you may extract such checks to uiState. Please see UiState class for example
-        if (uiState.status == Status.LOADING) {
+        if (uiState.isLoading) {
             CircularProgressIndicator(
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.align(Center)
             )
         } else {
-                Scaffold(
-                    topBar = {
-                        TopAppBar(title = {
+            Scaffold(
+                topBar = {
+                    TopAppBar(title = {
+                        Text(
+                            text = stringResource(R.string.pokedex),
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White,
+                            modifier = Modifier
+                                .padding(horizontal = 10.dp)
+                        )
+                    }, colors = TopAppBarDefaults.smallTopAppBarColors(
+                        containerColor = uiState.dominantColor,
+                        titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    ), navigationIcon = {
+
+                        // TODO: There is IconButton composable. You may use it instead for click handling
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = null,
+                            tint = Color.White,
+                            modifier = Modifier
+                                .size(25.dp)
+                                .clickable {
+                                    onArrowBackClick()
+                                }
+                        )
+                    },
+                        actions = {
                             Text(
-                                text = stringResource(R.string.pokedex),
+                                text = if (pokemonId in 10..100) {
+                                    stringResource(R.string.id_0, pokemonId)
+                                } else if (pokemonId <= 10) {
+                                    stringResource(R.string.id_00, pokemonId)
+                                } else {
+                                    stringResource(R.string.id, pokemonId)
+                                },
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White,
-                                modifier = Modifier
-                                    .padding(horizontal = 10.dp)
                             )
-                        }, colors = TopAppBarDefaults.smallTopAppBarColors(
-                            containerColor = uiState.dominantColor,
-                            titleContentColor = MaterialTheme.colorScheme.onPrimary,
-                        ), navigationIcon = {
-
-                            // TODO: There is IconButton composable. You may use it instead for click handling
-                            Icon(
-                                imageVector = Icons.Default.ArrowBack,
-                                contentDescription = null,
-                                tint = Color.White,
-                                modifier = Modifier
-                                    .size(25.dp)
-                                    .clickable {
-                                        onArrowBackClick()
-                                    }
-                            )
-                        },
-                            actions = {
-                                Text(
-                                    text = if (pokemonId in 10..100) {
-                                        stringResource(R.string.id_0, pokemonId)
-                                    } else if (pokemonId <= 10) {
-                                        stringResource(R.string.id_00, pokemonId)
-                                    } else {
-                                        stringResource(R.string.id, pokemonId)
-                                    },
-                                    fontSize = 20.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color.White,
-                                )
-                            }
-                        )
-                    }
-                ) { innerPadding ->
-                    PokemonTop(
-                        modifier = Modifier.padding(innerPadding),
-                        pokemonImg = uiState.pokemonImg,
-                        dominantColor = uiState.dominantColor,
-                        pokemonInfoApiEntityInfo = uiState.pokemonInfo
+                        }
                     )
                 }
+            ) { innerPadding ->
+                PokemonTop(
+                    modifier = Modifier.padding(innerPadding),
+                    pokemonImg = uiState.pokemonImg,
+                    dominantColor = uiState.dominantColor,
+                    pokemonInfoApiEntityInfo = uiState.pokemonInfo
+                )
+            }
         }
     }
 }
@@ -232,18 +229,15 @@ fun PokemonDetailDataItem(
 
 @Composable
 fun PokemonDetailDataSection(
-    pokemonWeight: Int, pokemonHeight: Int, sectionHeight: Dp = 8.dp
+    pokemonWeight: Float, pokemonHeight: Float, sectionHeight: Dp = 8.dp
 ) {
 
-    //TODO: Please move this calculation to VM level or use get() in uiState
-    // also toFloat() method could be used
-    // bc these calculation could made some distortions in original data
-    // f.e. bulbasaur weight id 69 , however 6.9 is displayed. Same for height
+    //TODO: bulbasaur weight id 69 , however 6.9 is displayed. Same for height
     val pokemonWeightInKg = remember {
-        round(pokemonWeight * 100f) / 1000f
+        pokemonWeight
     }
     val pokemonHeightInM = remember {
-        round(pokemonHeight * 100f) / 1000f
+        pokemonHeight
     }
     Row(
         modifier = Modifier.fillMaxWidth()

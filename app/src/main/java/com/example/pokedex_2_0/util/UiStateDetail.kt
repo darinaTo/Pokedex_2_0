@@ -10,7 +10,6 @@ data class UiStateDetail(
     val dominantColor: Color = Color.White
 ){
 
-    // TODO: Example for PokemonDetailScreen
     val isLoading
         get() = status == Status.LOADING
 }

@@ -91,7 +91,7 @@ fun PokemonGrid(
     onScreenTab: (String) -> Unit,
     defaultColor: Color,
     modifier: Modifier = Modifier,
-    viewModel: PokemonViewModel = hiltViewModel() // TODO: replace with lambda instead of VM passing
+    viewModel: PokemonViewModel = hiltViewModel() //TODO: replace with lambda instead of VM passing
 ) {
     val state = rememberLazyGridState()
 
@@ -118,9 +118,9 @@ fun PokemonEntry(
     onScreenTab: (String) -> Unit,
     entry: PokemonUiEntity,
     defaultColor : Color,
-    viewModel: PokemonViewModel = hiltViewModel() // TODO: same as above
+    viewModel: PokemonViewModel = hiltViewModel() //TODO: same as above
 ) {
-    // TODO: Please use state hoisting approach and move this parameter to uiState
+    //TODO: Please use state hoisting approach and move this parameter to uiState
     var color by remember {
         mutableStateOf(defaultColor)
     }

@@ -13,6 +13,9 @@ import com.example.pokedex_2_0.database.entities.PokemonInfoDBEntity
 import com.example.pokedex_2_0.database.entities.PokemonInfoFullInfo
 import com.example.pokedex_2_0.database.entities.StatEntityDB
 import com.example.pokedex_2_0.database.entities.TypeEntity
+import com.example.pokedex_2_0.util.covertValue
+import com.example.pokedex_2_0.util.extractPokemonNumber
+import com.example.pokedex_2_0.util.getPokemonImageUrl
 
 fun PokemonApiResponse.mapToDatabaseModel(): List<PokemonDBEntity> {
     return this.pokemonApiEntities.map { pokemon ->
@@ -47,26 +50,27 @@ fun PokemonInfoApiResponse.mapToDatabaseModel(): PokemonInfoDBEntity {
 }
 
 fun PokemonInfoFullInfo.mapToUiEntity(): PokemonUiInfoEntity {
-    return  PokemonUiInfoEntity(
+    return PokemonUiInfoEntity(
         id = this.pokemonEntity.id,
-            name = this.pokemonEntity.name,
-            height = this.pokemonEntity.height,
-            weight = this.pokemonEntity.weight,
-            stats = this.statEntities.map {
-                Stat(
-                    base_stat = it.baseStat,
-                    statInfo = StatX(it.name)
-                )
-            },
-            types = this.typeEntities.map {
-                Type(
-                    type = TypeX(it.name)
-                )
-            }
-        )
+        name = this.pokemonEntity.name,
+        height = covertValue(this.pokemonEntity.height),
+        weight = covertValue(this.pokemonEntity.weight),
+        stats = this.statEntities.map {
+            Stat(
+                base_stat = it.baseStat,
+                statInfo = StatX(it.name)
+            )
+        },
+        types = this.typeEntities.map {
+            Type(
+                type = TypeX(it.name)
+            )
+        }
+    )
 
 }
-fun List<Type>.mapTypeToDatabaseModel(pokemonId : Int) : List<TypeEntity> {
+
+fun List<Type>.mapTypeToDatabaseModel(pokemonId: Int): List<TypeEntity> {
     return map {
         TypeEntity(
             name = it.type.name,
@@ -75,7 +79,7 @@ fun List<Type>.mapTypeToDatabaseModel(pokemonId : Int) : List<TypeEntity> {
     }
 }
 
-fun List<Stat>.mapStatToDatabaseModel(pokemonId : Int) : List<StatEntityDB> {
+fun List<Stat>.mapStatToDatabaseModel(pokemonId: Int): List<StatEntityDB> {
     return map {
         StatEntityDB(
             baseStat = it.base_stat,
@@ -83,16 +87,4 @@ fun List<Stat>.mapStatToDatabaseModel(pokemonId : Int) : List<StatEntityDB> {
             pokemonId = pokemonId
         )
     }
-}
-
-// TODO: This function is more related to util entities. Better move to util package
-private fun extractPokemonNumber(link: String): Int {
-    val regex = Regex("/pokemon/(\\d+)/")
-    val matchResult = regex.find(link)
-    return matchResult?.groupValues?.get(1)?.toIntOrNull() ?: -1
-}
-
-// TODO: This function is more related to util entities. Better move to util package
-private fun getPokemonImageUrl(number: Int): String {
-    return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${number}.png "
 }

@@ -32,7 +32,7 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 
     private val pokemonFlow = pokemonRepository.pokemonList.onEach { pokemon ->
-        _uiState.update { it.copy(pokemon = pokemon) }
+        _uiState.update { it.copy(pokemon = pokemon, status = Status.DONE) }
     }
 
 
@@ -48,8 +48,6 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
     // Also it could be an extension function
     fun calcColor(drawable: Drawable, onFinish: (Color) -> Unit) {
         val bitmap = (drawable as BitmapDrawable).bitmap.copy(Bitmap.Config.ARGB_8888, true)
-        // TODO: Bitmap is non-nullable there ia no necessity to use unsafe call.
-        //  AND unsafe call without null-check is evil
         Palette.from(bitmap).generate { palette ->
             palette?.dominantSwatch?.rgb?.let { color ->
                 onFinish(Color(color))
@@ -60,9 +58,8 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
 
     fun getPokemon() {
         viewModelScope.launch(Dispatchers.IO) {
-                currentPage += OFFSET
-                pokemonRepository.getPokemonList(currentPage)
-                _uiState.update { it.copy(status = Status.DONE) } // TODO: it is better to set this value in pokemonFlow onEach
+            currentPage += OFFSET
+            pokemonRepository.getPokemonList(currentPage)
         }
     }
 }
