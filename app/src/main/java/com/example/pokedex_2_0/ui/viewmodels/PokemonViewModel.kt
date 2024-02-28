@@ -1,9 +1,10 @@
-package com.example.pokedex_2_0.ui.viewdodels
+package com.example.pokedex_2_0.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pokedex_2_0.data.impl.PokemonRepository
+import com.example.pokedex_2_0.data.constants.Constants.ERROR_MESSAGE
 import com.example.pokedex_2_0.data.constants.Constants.OFFSET
+import com.example.pokedex_2_0.data.impl.PokemonRepository
 import com.example.pokedex_2_0.utils.Status
 import com.example.pokedex_2_0.utils.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,28 +32,22 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
     }
 
     private val errorFlow = pokemonRepository.errorFlow.onEach {
-//TODO: show error dialog
+        _uiState.update { it.copy(errorMessage = ERROR_MESSAGE) }
     }
 
 
     init {
         viewModelScope.launch {
-            pokemonRepository.getPokemonList(currentPage)
+            pokemonRepository.getPokemonListByOffset(currentPage)
             pokemonFlow.launchIn(viewModelScope)
             errorFlow.launchIn(viewModelScope)
         }
     }
 
-    //TODO: This functionality more appropriate for some util-type entities.
-    // Consider moving to separate file or combine with similar entity
-    // Also it could be an extension function
-
-
-
     fun getPokemon() {
         viewModelScope.launch(Dispatchers.IO) {
             currentPage += OFFSET
-            pokemonRepository.getPokemonList(currentPage)
+            pokemonRepository.getPokemonListByOffset(currentPage)
         }
     }
 }

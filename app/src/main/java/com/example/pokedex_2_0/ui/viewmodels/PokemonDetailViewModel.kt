@@ -1,9 +1,10 @@
-package com.example.pokedex_2_0.ui.viewdodels
+package com.example.pokedex_2_0.ui.viewmodels
 
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pokedex_2_0.data.constants.Constants
 import com.example.pokedex_2_0.data.impl.PokemonRepository
 import com.example.pokedex_2_0.utils.Status
 import com.example.pokedex_2_0.utils.UiStateDetail
@@ -29,7 +30,9 @@ class PokemonDetailViewModel @Inject constructor(
     private val pokemonName: String
     private val pokemonImg: String
     private val dominantColor: Int
-
+    private val errorFlow = pokemonRepository.errorFlow.onEach {
+        _uiState.update { it.copy(errorMessage = Constants.ERROR_MESSAGE) }
+    }
     init {
         pokemonName = requireNotNull(savedStateHandle.get<String>("pokemonName"))
         pokemonImg = requireNotNull(savedStateHandle.get<String>("pokemonImg"))
@@ -38,6 +41,7 @@ class PokemonDetailViewModel @Inject constructor(
         viewModelScope.launch {
             getPokemonInfo(pokemonName)
         }
+        errorFlow.launchIn(viewModelScope)
     }
 
     // TODO: parameter could be removed as pokemonName is available in method's scope

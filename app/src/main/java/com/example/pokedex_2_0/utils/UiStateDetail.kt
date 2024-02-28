@@ -8,6 +8,8 @@ data class UiStateDetail(
     val status: Status = Status.LOADING,
     val pokemonImg: String = "",
     val dominantColor: Color = Color.White,
-    val isLoading : Boolean = true
+    val isLoading : Boolean = true,
+    val errorMessage : String = ""
+
 )
 

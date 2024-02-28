@@ -43,10 +43,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.pokedex_2_0.R
+import com.example.pokedex_2_0.data.constants.Constants.POKEMON_DETAIL_ROUTE
 import com.example.pokedex_2_0.domain.entities.PokemonUiEntity
 import com.example.pokedex_2_0.ui.theme.LightBlack
-import com.example.pokedex_2_0.data.constants.Constants.POKEMON_DETAIL_ROUTE
-import com.example.pokedex_2_0.ui.viewdodels.PokemonViewModel
+import com.example.pokedex_2_0.ui.viewmodels.PokemonViewModel
 import com.example.pokedex_2_0.utils.calcColor
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -58,6 +58,7 @@ fun PokemonListScreen(
     viewModel: PokemonViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val message = uiState.errorMessage
     Scaffold(topBar = {
         TopAppBar(
             title = {
@@ -81,13 +82,19 @@ fun PokemonListScreen(
                 .fillMaxSize(),
             color = LightBlack
         ) {
-            PokemonGrid(
-                entriesList = uiState.pokemon,
-                onScreenTab = onScreenTap,
-                defaultColor = uiState.defaultColor,
-                isLoading = uiState.isLoading,
-                reloadInfo = { viewModel.getPokemon() },
-            )
+            if (message.isNotEmpty()) {
+                ErrorDialog(
+                    message = message
+                )
+            } else {
+                PokemonGrid(
+                    entriesList = uiState.pokemon,
+                    onScreenTab = onScreenTap,
+                    defaultColor = uiState.defaultColor,
+                    isLoading = uiState.isLoading,
+                    reloadInfo = { viewModel.getPokemon() },
+                )
+            }
         }
     }
 }
@@ -181,3 +188,4 @@ fun PokemonEntry(
         }
     }
 }
+

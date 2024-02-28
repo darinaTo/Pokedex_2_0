@@ -15,7 +15,7 @@ object Constants {
     const val POKEMON_DETAIL_ROUTE = "pokemon_detail_screen"
     const val CHANNEL_ID = "POKEDEX_NOTIFICATION"
     const val NOTIFICATION_ID = 1
-
+    const val ERROR_MESSAGE = "Some trouble with network connection"
 
     val pokemonDetailArguments = listOf(
             navArgument("pokemonColor") {

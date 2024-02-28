@@ -60,7 +60,7 @@ import com.example.pokedex_2_0.domain.entities.PokemonUiInfoEntity
 import com.example.pokedex_2_0.domain.entities.networkEntities.pokemonDetail.Type
 import com.example.pokedex_2_0.ui.theme.Black
 import com.example.pokedex_2_0.ui.theme.LightBlack
-import com.example.pokedex_2_0.ui.viewdodels.PokemonDetailViewModel
+import com.example.pokedex_2_0.ui.viewmodels.PokemonDetailViewModel
 import com.example.pokedex_2_0.utils.parseStatToAbbr
 import com.example.pokedex_2_0.utils.parseStatToColor
 import com.example.pokedex_2_0.utils.parseTypeToColor
@@ -74,67 +74,72 @@ fun PokemonDetailScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val pokemonId = uiState.pokemonInfo.id
+    val message = uiState.errorMessage
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Black),
-    ) {
-        if (uiState.isLoading) {
-            CircularProgressIndicator(
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.align(Center)
-            )
-        } else {
-            Scaffold(
-                topBar = {
-                    TopAppBar(title = {
-                        Text(
-                            text = stringResource(R.string.pokedex),
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White,
-                            modifier = Modifier
-                                .padding(horizontal = 10.dp)
-                        )
-                    }, colors = TopAppBarDefaults.smallTopAppBarColors(
-                        containerColor = uiState.dominantColor,
-                        titleContentColor = MaterialTheme.colorScheme.onPrimary,
-                    ), navigationIcon = {
-                        IconButton(onClick = {  onArrowBackClick()}) {
-                            Icon(
-                                imageVector = Icons.Default.ArrowBack,
-                                contentDescription = "back navigate",
-                                tint = Color.White,
-                                modifier = Modifier
-                                    .size(25.dp)
-
-                            )
-                        }
-                    },
-                        actions = {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Black),
+        ) {
+            if (message.isNotEmpty()) {
+                ErrorDialog(message = message, modifier =  Modifier.align(Center))
+            } else {
+            if (uiState.isLoading) {
+                CircularProgressIndicator(
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.align(Center)
+                )
+            } else {
+                Scaffold(
+                    topBar = {
+                        TopAppBar(title = {
                             Text(
-                                text = if (pokemonId in 10..100) {
-                                    stringResource(R.string.id_0, pokemonId)
-                                } else if (pokemonId <= 10) {
-                                    stringResource(R.string.id_00, pokemonId)
-                                } else {
-                                    stringResource(R.string.id, pokemonId)
-                                },
+                                text = stringResource(R.string.pokedex),
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White,
+                                modifier = Modifier
+                                    .padding(horizontal = 10.dp)
                             )
-                        }
+                        }, colors = TopAppBarDefaults.smallTopAppBarColors(
+                            containerColor = uiState.dominantColor,
+                            titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                        ), navigationIcon = {
+                            IconButton(onClick = { onArrowBackClick() }) {
+                                Icon(
+                                    imageVector = Icons.Default.ArrowBack,
+                                    contentDescription = "back navigate",
+                                    tint = Color.White,
+                                    modifier = Modifier
+                                        .size(25.dp)
+
+                                )
+                            }
+                        },
+                            actions = {
+                                Text(
+                                    text = if (pokemonId in 10..100) {
+                                        stringResource(R.string.id_0, pokemonId)
+                                    } else if (pokemonId <= 10) {
+                                        stringResource(R.string.id_00, pokemonId)
+                                    } else {
+                                        stringResource(R.string.id, pokemonId)
+                                    },
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.White,
+                                )
+                            }
+                        )
+                    }
+                ) { innerPadding ->
+                    PokemonTop(
+                        modifier = Modifier.padding(innerPadding),
+                        pokemonImg = uiState.pokemonImg,
+                        dominantColor = uiState.dominantColor,
+                        pokemonInfoApiEntityInfo = uiState.pokemonInfo
                     )
                 }
-            ) { innerPadding ->
-                PokemonTop(
-                    modifier = Modifier.padding(innerPadding),
-                    pokemonImg = uiState.pokemonImg,
-                    dominantColor = uiState.dominantColor,
-                    pokemonInfoApiEntityInfo = uiState.pokemonInfo
-                )
             }
         }
     }
