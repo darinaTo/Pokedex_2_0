@@ -9,8 +9,8 @@ import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.example.pokedex_2_0.util.Constants.CHANNEL_ID
-import com.example.pokedex_2_0.util.Constants.NOTIFICATION_ID
+import com.example.pokedex_2_0.data.constants.Constants.CHANNEL_ID
+import com.example.pokedex_2_0.data.constants.Constants.NOTIFICATION_ID
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 

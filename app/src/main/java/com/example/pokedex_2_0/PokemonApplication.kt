@@ -15,7 +15,7 @@ class PokemonApplication : Application() {
     //TODO:Also, please extract workManager-related functionality to separate files and inject it (!Do not forget required Hilt annotation!)
     override fun onCreate() {
         super.onCreate()
-        val work = PeriodicWorkRequestBuilder<PokedexWorkManager>(1,TimeUnit.DAYS)
+        val work = PeriodicWorkRequestBuilder<PokedexWorkManager>(1, TimeUnit.DAYS)
             .setConstraints(
                 Constraints.Builder()
                     .setRequiredNetworkType(
