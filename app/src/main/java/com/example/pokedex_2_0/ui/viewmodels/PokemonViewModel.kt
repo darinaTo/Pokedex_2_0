@@ -35,7 +35,6 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
 
     init {
         viewModelScope.launch {
-            pokemonRepository.getPokemonListByOffset(currentPage)
             getPokemonOffset()
             errorFlow.launchIn(viewModelScope)
         }
@@ -49,7 +48,7 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
         fun getPokemon() {
             viewModelScope.launch(Dispatchers.IO) {
                 currentPage += OFFSET
-                pokemonRepository.getPokemonListByOffset(currentPage)
+                pokemonRepository.getPokemonList(currentPage)
             }
         }
     }

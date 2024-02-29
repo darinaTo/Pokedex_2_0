@@ -48,8 +48,6 @@ import com.example.pokedex_2_0.domain.entities.PokemonUiEntity
 import com.example.pokedex_2_0.ui.theme.LightBlack
 import com.example.pokedex_2_0.ui.viewmodels.PokemonViewModel
 import com.example.pokedex_2_0.utils.calcColor
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -119,7 +117,7 @@ fun PokemonGrid(
         modifier = Modifier.padding(top = 14.dp)
     ) {
         items(entriesList) { item ->
-            if (state.canScrollForward) {
+            if (!state.canScrollForward) {
                 reloadInfo()
             }
             PokemonEntry(
@@ -140,9 +138,6 @@ fun PokemonEntry(
     var color by remember {
         mutableStateOf(defaultColor)
     }
-    //TODO: Encoding logic could be moved to extension function
-    // And maybe safeArgs plugin can simplify this issue
-    val encodedUrl = URLEncoder.encode(entry.imageUrl, StandardCharsets.UTF_8.toString())
 
     Box(contentAlignment = Alignment.Center,
         modifier = modifier

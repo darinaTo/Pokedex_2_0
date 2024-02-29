@@ -36,6 +36,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -76,14 +77,14 @@ fun PokemonDetailScreen(
     val pokemonId = uiState.pokemonInfo.id
     val message = uiState.errorMessage
 
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Black),
-        ) {
-            if (message.isNotEmpty()) {
-                ErrorDialog(message = message, modifier =  Modifier.align(Center))
-            } else {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Black),
+    ) {
+        if (message.isNotEmpty()) {
+            ErrorDialog(message = message, modifier = Modifier.align(Center))
+        } else {
             if (uiState.isLoading) {
                 CircularProgressIndicator(
                     color = MaterialTheme.colorScheme.primary,
@@ -286,8 +287,6 @@ fun PokemonTypeSection(types: List<Type>) {
     }
 }
 
-// TODO: Please consider simplification of these Composable combination as potential optimisation
-//TODO : change to lazy column
 @Composable
 fun PokemonStat(
     statName: String,
@@ -329,41 +328,59 @@ fun PokemonStat(
                 .weight(0.17f),
             textAlign = TextAlign.Center
         )
+        PokemonStatPercent(
+            curPercent = curPercent,
+            statColor = statColor,
+            textShow = textShow,
+            maxValue = maxValue,
+            statValue = statValue,
+            modifier = Modifier.weight(1f)
+        )
 
+    }
+}
+
+@Composable
+fun PokemonStatPercent(
+    curPercent: State<Float>,
+    statColor: Color,
+    textShow: Float,
+    maxValue: Int,
+    statValue: Int,
+    modifier: Modifier
+) {
+    Row(
+        modifier = modifier
+            .height(23.dp)
+            .clip(CircleShape)
+            .background(Color.White)
+    ) {
         Row(
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .height(23.dp)
+                .fillMaxHeight()
+                .fillMaxWidth(curPercent.value)
                 .clip(CircleShape)
-                .background(Color.White)
-                .weight(1f)
+                .background(statColor)
+                .padding(horizontal = 8.dp, vertical = 1.dp)
         ) {
-            Row(
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .fillMaxWidth(curPercent.value)
-                    .clip(CircleShape)
-                    .background(statColor)
-                    .padding(horizontal = 8.dp, vertical = 1.dp)
-            ) {
-                if (textShow.absoluteValue.toInt() > 20) {
-                    Text(
-                        text = stringResource(R.string.percent, statValue, maxValue),
-                        fontSize = 16.sp,
-                        color = Color.White
-                    )
-                }
-            }
-            if (textShow.absoluteValue.toInt() <= 20) {
+            if (textShow.absoluteValue.toInt() > 20) {
                 Text(
                     text = stringResource(R.string.percent, statValue, maxValue),
                     fontSize = 16.sp,
-                    color = Color.Black,
-                    modifier = Modifier
-                        .padding(start = (curPercent.value + 8).dp)
+                    color = Color.White
                 )
             }
+        }
+        if (textShow.absoluteValue.toInt() <= 20) {
+            Text(
+                text = stringResource(R.string.percent, statValue, maxValue),
+                fontSize = 16.sp,
+                color = Color.Black,
+                modifier = Modifier
+                    .padding(start = (curPercent.value + 8).dp)
+            )
         }
     }
 }

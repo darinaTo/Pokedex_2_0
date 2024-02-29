@@ -51,7 +51,7 @@ suspend fun getPokemonListByOffset(offset: Int) :  Flow<List<PokemonUiEntity>> {
          }.filterNotNull().map { it.mapToUiEntity() }
      }
 }
-  private  suspend fun getPokemonList(offset: Int) {
+    suspend fun getPokemonList(offset: Int) {
             runCatching {
                 api.getPokemonList(offset)
             }.onSuccess { pokemonData ->
