@@ -135,7 +135,6 @@ fun PokemonDetailScreen(
                 ) { innerPadding ->
                     PokemonTop(
                         modifier = Modifier.padding(innerPadding),
-                        pokemonImg = uiState.pokemonImg,
                         dominantColor = uiState.dominantColor,
                         pokemonInfoApiEntityInfo = uiState.pokemonInfo
                     )
@@ -147,7 +146,6 @@ fun PokemonDetailScreen(
 
 @Composable
 fun PokemonTop(
-    pokemonImg: String,
     dominantColor: Color,
     pokemonInfoApiEntityInfo: PokemonUiInfoEntity,
     modifier: Modifier = Modifier
@@ -168,7 +166,7 @@ fun PokemonTop(
                 .background(dominantColor),
         ) {
             AsyncImage(
-                model = pokemonImg,
+                model = pokemonInfoApiEntityInfo.image,
                 contentDescription = pokemonInfoApiEntityInfo.name,
                 modifier = Modifier
                     .size(250.dp)

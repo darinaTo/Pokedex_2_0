@@ -45,7 +45,8 @@ fun PokemonInfoApiResponse.mapToDatabaseModel(): PokemonInfoDbEntity {
         id = this.id,
         name = this.name,
         weight = this.weight,
-        height = this.height
+        height = this.height,
+        image = getPokemonImageUrl(id)
     )
 }
 
@@ -65,7 +66,8 @@ fun PokemonInfoFullInfo.mapToUiEntity(): PokemonUiInfoEntity {
             Type(
                 type = TypeX(it.name)
             )
-        }
+        },
+        image = this.pokemonEntity.image
     )
 
 }

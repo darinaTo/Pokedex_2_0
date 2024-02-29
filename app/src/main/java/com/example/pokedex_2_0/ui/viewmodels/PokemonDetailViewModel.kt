@@ -28,16 +28,14 @@ class PokemonDetailViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(UiStateDetail())
     val uiState: StateFlow<UiStateDetail> = _uiState.asStateFlow()
     private val pokemonName: String
-    private val pokemonImg: String
     private val dominantColor: Int
     private val errorFlow = pokemonRepository.errorFlow.onEach {
         _uiState.update { it.copy(errorMessage = Constants.ERROR_MESSAGE) }
     }
     init {
         pokemonName = requireNotNull(savedStateHandle.get<String>("pokemonName"))
-        pokemonImg = requireNotNull(savedStateHandle.get<String>("pokemonImg"))
         dominantColor = requireNotNull(savedStateHandle.get<Int>("pokemonColor"))
-        _uiState.update { it.copy(pokemonImg = pokemonImg, dominantColor = Color(dominantColor)) }
+        _uiState.update { it.copy( dominantColor = Color(dominantColor)) }
         viewModelScope.launch {
             getPokemonInfo(pokemonName)
         }

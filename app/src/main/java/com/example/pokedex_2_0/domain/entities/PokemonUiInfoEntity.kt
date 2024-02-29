@@ -9,5 +9,6 @@ data class PokemonUiInfoEntity(
     val height: Float = -1f,
     val weight: Float = -1f,
     val stats: List<Stat> = emptyList(),
-    val types: List<Type> = emptyList()
+    val types: List<Type> = emptyList(),
+    val image : String = ""
 )

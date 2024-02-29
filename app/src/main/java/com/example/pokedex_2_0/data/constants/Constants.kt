@@ -23,9 +23,6 @@ object Constants {
             },
             navArgument("pokemonName") {
                 type = NavType.StringType
-            },
-            navArgument("pokemonImg") {
-                type = NavType.StringType
-            },
+            }
     )
 }

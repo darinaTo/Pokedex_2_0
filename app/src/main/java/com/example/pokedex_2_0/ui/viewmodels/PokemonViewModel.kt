@@ -27,9 +27,6 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
     private val _uiState = MutableStateFlow(UiState())
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 
-    private val pokemonFlow = pokemonRepository.pokemonList.onEach { pokemon ->
-        _uiState.update { it.copy(pokemon = pokemon, status = Status.DONE) }
-    }
 
     private val errorFlow = pokemonRepository.errorFlow.onEach {
         _uiState.update { it.copy(errorMessage = ERROR_MESSAGE) }
@@ -39,15 +36,20 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
     init {
         viewModelScope.launch {
             pokemonRepository.getPokemonListByOffset(currentPage)
-            pokemonFlow.launchIn(viewModelScope)
+            getPokemonOffset()
             errorFlow.launchIn(viewModelScope)
         }
     }
 
-    fun getPokemon() {
-        viewModelScope.launch(Dispatchers.IO) {
-            currentPage += OFFSET
-            pokemonRepository.getPokemonListByOffset(currentPage)
+    private suspend fun getPokemonOffset() {
+        pokemonRepository.getPokemonListByOffset(OFFSET).onEach { pokemon ->
+            _uiState.update { it.copy(pokemon = pokemon, status = Status.DONE) }
+        }.launchIn(viewModelScope)
+    }
+        fun getPokemon() {
+            viewModelScope.launch(Dispatchers.IO) {
+                currentPage += OFFSET
+                pokemonRepository.getPokemonListByOffset(currentPage)
+            }
         }
     }
-}

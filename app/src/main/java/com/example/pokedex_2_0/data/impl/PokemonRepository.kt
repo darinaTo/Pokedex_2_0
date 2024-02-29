@@ -33,7 +33,6 @@ class PokemonRepository @Inject constructor(
     val errorFlow = _errorFlow.asSharedFlow()
 
 
-    val pokemonList: Flow<List<PokemonUiEntity>> = dao.getListPokemon().map { it.mapToUiEntity() }
     suspend fun getPokemonInfoByName(name: String): Flow<PokemonUiInfoEntity> {
         return withContext(Dispatchers.IO) {
             dao.getPokemonInfo(name).also { flow ->
@@ -43,13 +42,13 @@ class PokemonRepository @Inject constructor(
             }.filterNotNull().map { it.mapToUiEntity() }
         }
     }
-suspend fun getPokemonListByOffset(offset: Int) {
-     withContext(Dispatchers.IO) {
-         pokemonList.also { flow ->
-             if (flow.firstOrNull() == null) {
+suspend fun getPokemonListByOffset(offset: Int) :  Flow<List<PokemonUiEntity>> {
+   return  withContext(Dispatchers.IO) {
+         dao.getListPokemon().also { flow ->
+             if (flow.firstOrNull()?.isEmpty() == true) {
                  getPokemonList(offset)
              }
-         }
+         }.filterNotNull().map { it.mapToUiEntity() }
      }
 }
   private  suspend fun getPokemonList(offset: Int) {

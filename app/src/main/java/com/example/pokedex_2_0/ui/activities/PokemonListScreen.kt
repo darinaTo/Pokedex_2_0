@@ -153,8 +153,7 @@ fun PokemonEntry(
                 onScreenTab(
                     // TODO: could be simplified with passing arguments only and please use formatting
                     //TODO : перенести arguments color and image to db and add to uiState
-                    "${POKEMON_DETAIL_ROUTE}/${color.toArgb()}/${entry.pokemonName}" +
-                            "/${encodedUrl.substring(0, encodedUrl.lastIndex)}"
+                    "${POKEMON_DETAIL_ROUTE}/${color.toArgb()}/${entry.pokemonName}"
                 )
             }) {
         // TODO: please use state hoisting
