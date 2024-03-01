@@ -33,6 +33,7 @@ class MainActivity : ComponentActivity() {
                         arguments = pokemonDetailArguments
                     ) {
                         PokemonDetailScreen(
+                            //TODO read about popBackStack
                             onArrowBackClick = { navController.popBackStack() })
                     }
 

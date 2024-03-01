@@ -161,6 +161,7 @@ fun PokemonEntry(
                 model = entry.imageUrl,
                 contentDescription = entry.pokemonName,
                 onSuccess = { success ->
+                    //TODO: add method to save color in db and add one south of truth, can works with dominant color
                     val drawable = success.result.drawable
                     drawable.calcColor { dominantColor ->
                         color = dominantColor
