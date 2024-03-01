@@ -209,7 +209,10 @@ fun PokemonDetailSection(
 
 @Composable
 fun PokemonDetailDataItem(
-    dataValue: Float, dataUnit: String, dataCharacteristic: String, modifier: Modifier = Modifier
+    dataValue: Float,
+    dataUnit: String,
+    dataCharacteristic: String,
+    modifier: Modifier = Modifier
 ) {
 
     Column(

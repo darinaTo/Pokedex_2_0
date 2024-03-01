@@ -6,10 +6,8 @@ import com.example.pokedex_2_0.domain.entities.PokemonUiEntity
 data class UiState(
     val pokemon: List<PokemonUiEntity> = emptyList(),
     val status: Status = Status.LOADING,
-    val defaultColor : Color = Color.White,
-    val errorMessage : String = ""
+    val defaultColor: Color = Color.White,
+    val isLoading: Boolean = true,
+    val errorMessage: String = "",
 )
-{
-    val isLoading
-        get() = status == Status.LOADING
-}
+

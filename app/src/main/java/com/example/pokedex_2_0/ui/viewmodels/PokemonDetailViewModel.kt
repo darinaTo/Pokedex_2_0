@@ -37,13 +37,12 @@ class PokemonDetailViewModel @Inject constructor(
         dominantColor = requireNotNull(savedStateHandle.get<Int>("pokemonColor"))
         _uiState.update { it.copy( dominantColor = Color(dominantColor)) }
         viewModelScope.launch {
-            getPokemonInfo(pokemonName)
+            getPokemonInfo()
         }
         errorFlow.launchIn(viewModelScope)
     }
 
-    // TODO: parameter could be removed as pokemonName is available in method's scope
-    private suspend fun getPokemonInfo(pokemonName: String) {
+    private suspend fun getPokemonInfo() {
         pokemonRepository.getPokemonInfoByName(pokemonName).onEach { pokemon ->
                 _uiState.update { it.copy(pokemonInfo = pokemon, status = Status.DONE, isLoading = false) }
         }.launchIn(viewModelScope)

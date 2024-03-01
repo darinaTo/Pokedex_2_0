@@ -18,8 +18,7 @@ import dagger.assisted.AssistedInject
 class PokedexWorkManager @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters
-) :
-    CoroutineWorker(context, workerParams) {
+) : CoroutineWorker(context, workerParams) {
     override suspend fun doWork(): Result {
         showNotification(applicationContext)
         return Result.success()

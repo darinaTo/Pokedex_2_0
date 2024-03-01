@@ -42,7 +42,7 @@ class PokemonViewModel @Inject constructor(private val pokemonRepository: Pokemo
 
     private suspend fun getPokemonOffset() {
         pokemonRepository.getPokemonListByOffset(OFFSET).onEach { pokemon ->
-            _uiState.update { it.copy(pokemon = pokemon, status = Status.DONE) }
+            _uiState.update { it.copy(pokemon = pokemon, status = Status.DONE, isLoading = false) }
         }.launchIn(viewModelScope)
     }
         fun getPokemon() {

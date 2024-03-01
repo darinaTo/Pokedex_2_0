@@ -29,7 +29,7 @@ class PokemonApplication : Application() {
 
         workManager.enqueueUniquePeriodicWork(
             "pokedex",
-            ExistingPeriodicWorkPolicy.KEEP,
+            ExistingPeriodicWorkPolicy.UPDATE,
             work
         )
     }
