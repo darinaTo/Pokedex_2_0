@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         PokemonDetailScreen(
                             //TODO read about popBackStack
-                            onArrowBackClick = { navController.popBackStack() })
+                            onArrowBackClick = { navController.navigate(POKEMON_LIST_ROUTE) })
                     }
 
                 }

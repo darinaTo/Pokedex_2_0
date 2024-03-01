@@ -98,9 +98,7 @@ fun PokemonDetailScreen(
                                 text = stringResource(R.string.pokedex),
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White,
-                                modifier = Modifier
-                                    .padding(horizontal = 10.dp)
+                                color = Color.White
                             )
                         }, colors = TopAppBarDefaults.smallTopAppBarColors(
                             containerColor = uiState.dominantColor,
