@@ -151,8 +151,7 @@ fun PokemonEntry(
                     "${POKEMON_DETAIL_ROUTE}/${color.toArgb()}/${entry.pokemonName}"
                 )
             }) {
-        // TODO: please use state hoisting
-        var isLoading by remember { mutableStateOf(true) } // TODO: should be part of uiState
+        var isLoading by remember { mutableStateOf(true) }
         if (isLoading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
@@ -163,7 +162,7 @@ fun PokemonEntry(
                 onSuccess = { success ->
                     //TODO: add method to save color in db and add one south of truth, can works with dominant color
                     val drawable = success.result.drawable
-                    drawable.calcColor { dominantColor ->
+                    drawable.calcColor { dominantColor: Color ->
                         color = dominantColor
                     }
                     isLoading = false

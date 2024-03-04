@@ -13,7 +13,7 @@ import javax.inject.Inject
 class NotificationUtils @Inject constructor(context: Context) {
     private val workManager = WorkManager.getInstance(context)
 
-    private val work = PeriodicWorkRequestBuilder<PokedexWorkManager>(4, TimeUnit.SECONDS)
+    private val work = PeriodicWorkRequestBuilder<PokedexWorkManager>(1, TimeUnit.DAYS)
         .setConstraints(
             Constraints.Builder()
                 .setRequiredNetworkType(

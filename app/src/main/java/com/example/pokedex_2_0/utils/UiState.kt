@@ -10,4 +10,3 @@ data class UiState(
     val isLoading: Boolean = true,
     val errorMessage: String = "",
 )
-

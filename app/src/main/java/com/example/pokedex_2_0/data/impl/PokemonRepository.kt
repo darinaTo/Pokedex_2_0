@@ -61,7 +61,6 @@ suspend fun getPokemonListByOffset(offset: Int) :  Flow<List<PokemonUiEntity>> {
             }
     }
 
-    //create separate interface for repository todo you may do it later on the final stage
     private suspend fun getPokemonInfo(name: String) {
             runCatching {
                 api.getPokemonInfo(name)
