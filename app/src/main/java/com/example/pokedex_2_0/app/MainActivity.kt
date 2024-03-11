@@ -1,4 +1,4 @@
-package com.example.pokedex_2_0
+package com.example.pokedex_2_0.app
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -25,7 +25,7 @@ class MainActivity : ComponentActivity() {
                 NavHost(navController = navController, startDestination = POKEMON_LIST_ROUTE) {
                     composable(POKEMON_LIST_ROUTE) {
                         PokemonListScreen(onScreenTap = { route ->
-                            navController.navigate(route)
+                            navController.navigate("${POKEMON_DETAIL_ROUTE}/${route}")
                         })
                     }
                     composable(

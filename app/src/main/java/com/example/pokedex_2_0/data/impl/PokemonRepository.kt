@@ -1,15 +1,15 @@
 package com.example.pokedex_2_0.data.impl
 
-import com.example.pokedex_2_0.data.service.localServices.PokemonDao
-import com.example.pokedex_2_0.data.service.networkSerivices.PokeApi
-import com.example.pokedex_2_0.data.service.networkSerivices.mapStatToDatabaseModel
-import com.example.pokedex_2_0.data.service.networkSerivices.mapToDatabaseModel
-import com.example.pokedex_2_0.data.service.networkSerivices.mapToUiEntity
-import com.example.pokedex_2_0.data.service.networkSerivices.mapTypeToDatabaseModel
+import com.example.pokedex_2_0.data.service.local.PokemonDao
+import com.example.pokedex_2_0.data.service.remote.PokeApi
 import com.example.pokedex_2_0.domain.entities.PokemonUiEntity
 import com.example.pokedex_2_0.domain.entities.PokemonUiInfoEntity
 import com.example.pokedex_2_0.domain.entities.networkEntities.pokemonDetail.PokemonInfoApiResponse
 import com.example.pokedex_2_0.domain.entities.networkEntities.pokemonList.PokemonApiResponse
+import com.example.pokedex_2_0.utils.mapStatToDatabaseModel
+import com.example.pokedex_2_0.utils.mapToDatabaseModel
+import com.example.pokedex_2_0.utils.mapToUiEntity
+import com.example.pokedex_2_0.utils.mapTypeToDatabaseModel
 import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow

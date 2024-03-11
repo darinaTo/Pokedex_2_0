@@ -1,8 +1,8 @@
 package com.example.pokedex_2_0.di
 
-import com.example.pokedex_2_0.data.service.localServices.PokemonDao
-import com.example.pokedex_2_0.data.service.networkSerivices.PokeApi
 import com.example.pokedex_2_0.data.impl.PokemonRepository
+import com.example.pokedex_2_0.data.service.local.PokemonDao
+import com.example.pokedex_2_0.data.service.remote.PokeApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -1,4 +1,4 @@
-package com.example.pokedex_2_0.data.service.localServices
+package com.example.pokedex_2_0.data.service.local
 
 import androidx.room.Dao
 import androidx.room.Insert

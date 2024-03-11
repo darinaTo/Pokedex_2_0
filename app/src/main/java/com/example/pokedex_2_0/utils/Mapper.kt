@@ -1,4 +1,4 @@
-package com.example.pokedex_2_0.data.service.networkSerivices
+package com.example.pokedex_2_0.utils
 
 import com.example.pokedex_2_0.domain.entities.PokemonUiEntity
 import com.example.pokedex_2_0.domain.entities.PokemonUiInfoEntity
@@ -13,9 +13,6 @@ import com.example.pokedex_2_0.domain.entities.networkEntities.pokemonDetail.Sta
 import com.example.pokedex_2_0.domain.entities.networkEntities.pokemonDetail.Type
 import com.example.pokedex_2_0.domain.entities.networkEntities.pokemonDetail.TypeX
 import com.example.pokedex_2_0.domain.entities.networkEntities.pokemonList.PokemonApiResponse
-import com.example.pokedex_2_0.utils.covertValue
-import com.example.pokedex_2_0.utils.extractPokemonNumber
-import com.example.pokedex_2_0.utils.getPokemonImageUrl
 
 fun PokemonApiResponse.mapToDatabaseModel(): List<PokemonDbEntity> {
     return this.pokemonApiEntities.map { pokemon ->

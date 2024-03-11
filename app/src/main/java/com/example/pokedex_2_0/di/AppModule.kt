@@ -2,7 +2,7 @@ package com.example.pokedex_2_0.di
 
 import android.content.Context
 import com.example.pokedex_2_0.data.constants.Constants
-import com.example.pokedex_2_0.data.service.networkSerivices.PokeApi
+import com.example.pokedex_2_0.data.service.remote.PokeApi
 import com.example.pokedex_2_0.utils.NotificationUtils
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory

@@ -6,14 +6,14 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import com.example.pokedex_2_0.PokedexWorkManager
+import com.example.pokedex_2_0.app.PokedexWorkManager
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class NotificationUtils @Inject constructor(context: Context) {
     private val workManager = WorkManager.getInstance(context)
 
-    private val work = PeriodicWorkRequestBuilder<PokedexWorkManager>(1, TimeUnit.DAYS)
+    private val work = PeriodicWorkRequestBuilder<PokedexWorkManager>(2, TimeUnit.SECONDS)
         .setConstraints(
             Constraints.Builder()
                 .setRequiredNetworkType(

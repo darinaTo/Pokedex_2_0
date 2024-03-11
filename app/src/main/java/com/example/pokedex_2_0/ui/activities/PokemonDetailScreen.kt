@@ -184,7 +184,8 @@ fun PokemonTop(
 
 @Composable
 fun PokemonDetailSection(
-    pokemonInfoApiEntityInfo: PokemonUiInfoEntity, modifier: Modifier = Modifier
+    pokemonInfoApiEntityInfo: PokemonUiInfoEntity,
+    modifier: Modifier = Modifier
 ) {
     Column(
         horizontalAlignment = CenterHorizontally, modifier = modifier.fillMaxSize()

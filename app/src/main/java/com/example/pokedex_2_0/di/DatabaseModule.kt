@@ -2,8 +2,8 @@ package com.example.pokedex_2_0.di
 
 import android.content.Context
 import androidx.room.Room
-import com.example.pokedex_2_0.data.service.localServices.PokemonDao
-import com.example.pokedex_2_0.data.service.localServices.PokemonDatabase
+import com.example.pokedex_2_0.data.service.local.PokemonDao
+import com.example.pokedex_2_0.data.service.local.PokemonDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -43,7 +43,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.pokedex_2_0.R
-import com.example.pokedex_2_0.data.constants.Constants.POKEMON_DETAIL_ROUTE
 import com.example.pokedex_2_0.domain.entities.PokemonUiEntity
 import com.example.pokedex_2_0.ui.theme.LightBlack
 import com.example.pokedex_2_0.ui.viewmodels.PokemonViewModel
@@ -146,9 +145,7 @@ fun PokemonEntry(
             .background(color)
             .clickable {
                 onScreenTab(
-                    // TODO: could be simplified with passing arguments only and please use formatting
-                    //TODO : перенести arguments color and image to db and add to uiState
-                    "${POKEMON_DETAIL_ROUTE}/${color.toArgb()}/${entry.pokemonName}"
+                    "${color.toArgb()}/${entry.pokemonName}"
                 )
             }) {
         var isLoading by remember { mutableStateOf(true) }
